@@ -74,7 +74,7 @@ function ReceiptContent() {
         </div>
         <Card className="bg-primary text-primary-foreground text-center p-6">
           <CardTitle className="flex items-center justify-center gap-2 text-xl"><Wallet/> Total Fare Paid</CardTitle>
-          <p className="text-5xl font-bold tracking-tighter mt-2">${finalFare.toFixed(2)}</p>
+          <p className="text-5xl font-bold tracking-tighter mt-2">R{finalFare.toFixed(2)}</p>
         </Card>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-4 print:hidden">
