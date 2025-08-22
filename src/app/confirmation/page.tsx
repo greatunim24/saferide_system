@@ -4,9 +4,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { destinations, rideTypes } from '@/lib/data';
-import { ArrowLeft, Car, Gem, MapPin, User, Users, Wallet } from 'lucide-react';
-import { Suspense } from 'react';
+import { allRides, destinations, providers } from '@/lib/data';
+import { ArrowLeft, Car, Gem, User, Users, Wallet, Ticket, Building } from 'lucide-react';
+import { Suspense, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Logo } from '@/components/Logo';
 
@@ -14,12 +14,17 @@ function ConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const destinationValue = searchParams.get('destination');
-  const rideTypeValue = searchParams.get('rideType');
+  const rideId = searchParams.get('rideId');
 
   const destination = destinations.find((d) => d.value === destinationValue);
-  const rideType = rideTypes.find((r) => r.id === rideTypeValue);
+  const ride = allRides.find((r) => r.id === rideId);
+  const provider = providers.find((p) => p.id === ride?.provider);
+  
+  const bookingToken = useMemo(() => {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  }, []);
 
-  if (!destination || !rideType) {
+  if (!destination || !ride || !provider) {
     return (
        <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader>
@@ -35,8 +40,8 @@ function ConfirmationContent() {
     );
   }
 
-  const baseFare = 15; // A mock base fare
-  const finalFare = baseFare * rideType.priceMultiplier;
+  const baseFare = 15;
+  const finalFare = baseFare * ride.priceMultiplier;
 
   const driver = {
     name: 'John D.',
@@ -44,7 +49,8 @@ function ConfirmationContent() {
     rating: 4.9,
   };
   
-  const RideIcon = rideType.id === 'standard' ? Car : rideType.id === 'premium' ? Gem : Users;
+  const RideIcon = ride.icon;
+  const ProviderIcon = provider.icon;
 
   return (
     <Card className="w-full max-w-lg shadow-2xl">
@@ -56,15 +62,19 @@ function ConfirmationContent() {
         <CardDescription className="text-lg">Please review the details below.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6 p-8">
+        <div className="p-4 border-2 border-dashed rounded-lg text-center">
+          <p className="text-muted-foreground font-semibold">Your Booking Token</p>
+          <p className="text-4xl font-bold tracking-widest text-primary font-mono">{bookingToken}</p>
+        </div>
         <div className="space-y-4 text-lg">
           <div className="flex justify-between items-center">
-            <span className="font-semibold flex items-center gap-2"><MapPin className="text-muted-foreground"/> Destination</span>
-            <span>{destination.label}</span>
+            <span className="font-semibold flex items-center gap-2"><Building className="text-muted-foreground"/> Provider</span>
+            <span className="flex items-center gap-2 font-semibold">{provider.name} <ProviderIcon className="h-6 w-auto"/></span>
           </div>
-          <Separator />
+           <Separator />
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><RideIcon className="text-muted-foreground"/> Ride Type</span>
-            <span>{rideType.name}</span>
+            <span>{ride.name}</span>
           </div>
            <Separator />
           <div className="flex justify-between items-center">
@@ -89,7 +99,7 @@ function ConfirmationContent() {
         <Button 
           size="lg" 
           className="py-7 text-lg transition-transform hover:scale-105" 
-          onClick={() => router.push(`/receipt?destination=${destinationValue}&rideType=${rideTypeValue}`)}
+          onClick={() => router.push(`/receipt?destination=${destinationValue}&rideId=${rideId}&token=${bookingToken}`)}
         >
           Confirm Ride
         </Button>
@@ -107,6 +117,7 @@ function ConfirmationSkeleton() {
                 <Skeleton className="h-6 w-1/2 mx-auto" />
             </CardHeader>
             <CardContent className="space-y-6 p-8">
+                <Skeleton className="h-20 w-full" />
                 <div className="space-y-4 text-lg">
                     <Skeleton className="h-8 w-full" />
                     <Separator/>

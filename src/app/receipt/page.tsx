@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { destinations, rideTypes } from '@/lib/data';
-import { ArrowLeft, Car, Gem, MapPin, Printer, User, Users, Wallet, CheckCircle } from 'lucide-react';
+import { allRides, destinations, providers } from '@/lib/data';
+import { ArrowLeft, Car, Gem, MapPin, Printer, User, Users, Wallet, CheckCircle, Ticket, Building } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -20,12 +20,15 @@ function ReceiptContent() {
   }, []);
 
   const destinationValue = searchParams.get('destination');
-  const rideTypeValue = searchParams.get('rideType');
+  const rideId = searchParams.get('rideId');
+  const token = searchParams.get('token');
 
   const destination = destinations.find((d) => d.value === destinationValue);
-  const rideType = rideTypes.find((r) => r.id === rideTypeValue);
+  const ride = allRides.find((r) => r.id === rideId);
+  const provider = providers.find((p) => p.id === ride?.provider);
 
-  if (!destination || !rideType) {
+
+  if (!destination || !ride || !provider || !token) {
     return (
        <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader>
@@ -42,8 +45,9 @@ function ReceiptContent() {
   }
 
   const baseFare = 15;
-  const finalFare = baseFare * rideType.priceMultiplier;
-  const RideIcon = rideType.id === 'standard' ? Car : rideType.id === 'premium' ? Gem : Users;
+  const finalFare = baseFare * ride.priceMultiplier;
+  const RideIcon = ride.icon;
+  const ProviderIcon = provider.icon;
 
   const handlePrint = () => {
     if (isClient) {
@@ -61,7 +65,16 @@ function ReceiptContent() {
         </div>
       </CardHeader>
       <CardContent className="space-y-6 p-8">
+        <div className="p-4 border rounded-lg text-center bg-muted">
+          <p className="text-muted-foreground font-semibold">Booking Token</p>
+          <p className="text-4xl font-bold tracking-widest text-primary font-mono">{token}</p>
+        </div>
         <div className="space-y-4 text-lg">
+           <div className="flex justify-between items-center">
+            <span className="font-semibold flex items-center gap-2"><Building className="text-muted-foreground"/> Provider</span>
+            <span className="flex items-center gap-2 font-semibold">{provider.name} <ProviderIcon className="h-6 w-auto"/></span>
+          </div>
+          <Separator />
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><MapPin className="text-muted-foreground"/> Destination</span>
             <span>{destination.label}</span>
@@ -69,7 +82,7 @@ function ReceiptContent() {
           <Separator />
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><RideIcon className="text-muted-foreground"/> Ride Type</span>
-            <span>{rideType.name}</span>
+            <span>{ride.name}</span>
           </div>
         </div>
         <Card className="bg-primary text-primary-foreground text-center p-6">
@@ -102,7 +115,10 @@ function ReceiptSkeleton() {
                 <Skeleton className="h-6 w-1/2 mx-auto" />
             </CardHeader>
             <CardContent className="space-y-6 p-8">
+                 <Skeleton className="h-20 w-full" />
                 <div className="space-y-4 text-lg">
+                    <Skeleton className="h-8 w-full" />
+                    <Separator/>
                     <Skeleton className="h-8 w-full" />
                     <Separator/>
                     <Skeleton className="h-8 w-full" />
