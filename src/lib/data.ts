@@ -2,6 +2,9 @@ import { Car, Gem, Users, CreditCard, Landmark, Apple } from 'lucide-react';
 import { Uber, Bolt, Didi } from '@/components/ProviderIcons';
 
 export const destinations = [
+  { value: 'uwc-innovation-hub', label: 'UWC Innovation Hub' },
+  { value: 'cput-bellville', label: 'CPUT Bellville Campus' },
+  { value: 'sanlam-parow', label: 'Sanlam Center Parow' },
   { value: 'cpt-airport', label: 'Cape Town International Airport (CPT)' },
   { value: 'va-waterfront', label: 'V&A Waterfront' },
   { value: 'table-mountain', label: 'Table Mountain Cableway' },
