@@ -25,7 +25,6 @@ export default function BookingPage() {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [destination, setDestination] = React.useState('');
-  const [customDestination, setCustomDestination] = React.useState('');
   const [selectedProviders, setSelectedProviders] = React.useState<string[]>([]);
   const [selectedRide, setSelectedRide] = React.useState<string | null>(null);
 
@@ -36,10 +35,9 @@ export default function BookingPage() {
 
 
   const handleBooking = () => {
-    const finalDestination = customDestination || destination;
-    if (finalDestination && selectedRide) {
+    if (destination && selectedRide) {
       const guestQuery = guestName ? `&guestName=${encodeURIComponent(guestName)}` : '';
-      router.push(`/confirmation?destination=${finalDestination}&rideId=${selectedRide}${guestQuery}`);
+      router.push(`/confirmation?destination=${destination}&rideId=${selectedRide}${guestQuery}`);
     }
   };
 
@@ -59,18 +57,8 @@ export default function BookingPage() {
     return rides.sort((a, b) => a.priceMultiplier - b.priceMultiplier);
   }, [selectedProviders]);
 
-  const getDestinationLabel = () => {
-    if (customDestination) return customDestination;
-    if (destination) {
-      return destinations.find((d) => d.value === destination)?.label;
-    }
-    return 'Select or type destination...';
-  }
-
-  const finalDestinationValue = customDestination || destination;
   const selectedRideData = allRides.find(r => r.id === selectedRide);
-  const selectedDestination = destinations.find((d) => d.value === destination);
-  const destinationLabel = customDestination || selectedDestination?.label;
+  const destinationLabel = destinations.find((d) => d.value === destination)?.label;
 
 
   return (
@@ -110,7 +98,9 @@ export default function BookingPage() {
               >
                 <div className="flex items-center">
                   <MapPin className="mr-4 h-6 w-6 text-muted-foreground" />
-                  {getDestinationLabel()}
+                  {destination
+                    ? destinations.find((d) => d.value === destination)?.label
+                    : 'Select a destination...'}
                 </div>
                 <ChevronsUpDown className="ml-2 h-5 w-5 shrink-0 opacity-50" />
               </Button>
@@ -119,17 +109,7 @@ export default function BookingPage() {
               <Command>
                  <CommandInput 
                   placeholder="Type or select a destination..." 
-                  className="h-12 text-lg" 
-                  value={customDestination}
-                  onValueChange={(value) => {
-                    setCustomDestination(value);
-                    if(destination) setDestination('');
-                    if (!value) {
-                       setOpen(true);
-                    } else {
-                        setOpen(false);
-                    }
-                  }}
+                  className="h-12 text-lg"
                 />
                 <CommandEmpty>No destination found.</CommandEmpty>
                 <CommandList>
@@ -140,7 +120,6 @@ export default function BookingPage() {
                         value={d.value}
                         onSelect={(currentValue) => {
                           setDestination(currentValue === destination ? '' : currentValue);
-                          setCustomDestination('');
                           setOpen(false);
                         }}
                         className="py-3 text-lg"
@@ -156,10 +135,10 @@ export default function BookingPage() {
           </Popover>
         </div>
 
-        {finalDestinationValue && <Separator />}
+        {destination && <Separator />}
 
         {/* Step 2: E-hailing Provider */}
-        {finalDestinationValue && (
+        {destination && (
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground">
@@ -189,10 +168,10 @@ export default function BookingPage() {
           </div>
         )}
 
-        {finalDestinationValue && <Separator />}
+        {destination && <Separator />}
 
         {/* Step 3: Ride Type */}
-        {finalDestinationValue && (
+        {destination && (
           <div className="space-y-4">
              <div className="flex items-center gap-4">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground">
@@ -236,7 +215,7 @@ export default function BookingPage() {
         )}
 
         {/* Step 4: Book */}
-        {finalDestinationValue && selectedRide && (
+        {destination && selectedRide && (
            <Dialog open={isGuestModalOpen} onOpenChange={setIsGuestModalOpen}>
               <DialogTrigger asChild>
                  <div className="pt-4">
