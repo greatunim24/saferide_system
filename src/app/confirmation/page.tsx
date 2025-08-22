@@ -166,7 +166,7 @@ function ConfirmationContent() {
           size="lg" 
           className="py-7 text-lg transition-transform hover:scale-105" 
           disabled={!paymentMethod || !bookingToken}
-          onClick={() => router.push(`/receipt?destination=${destinationValue}&rideId=${rideId}&token=${bookingToken}&payment=${paymentMethod}`)}
+          onClick={() => router.push(`/receipt?destination=${destinationValue}&rideId=${rideId}&token=${bookingToken}&payment=${paymentMethod}&driverName=${encodeURIComponent(driver.name)}`)}
         >
           Confirm & Pay
         </Button>

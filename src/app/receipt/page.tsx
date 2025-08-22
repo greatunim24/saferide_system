@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Suspense, useEffect, useMemo, useState } from 'react';
@@ -6,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { allRides, destinations, providers, paymentMethods } from '@/lib/data';
-import { ArrowLeft, MapPin, Printer, Wallet, CheckCircle, Building, CreditCard } from 'lucide-react';
+import { ArrowLeft, MapPin, Printer, Wallet, CheckCircle, Building, CreditCard, User } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -23,6 +24,7 @@ function ReceiptContent() {
   const rideId = searchParams.get('rideId');
   const token = searchParams.get('token');
   const paymentId = searchParams.get('payment');
+  const driverName = searchParams.get('driverName');
 
   const destinationLabel = useMemo(() => {
     const predefined = destinations.find((d) => d.value === destinationValue);
@@ -33,7 +35,7 @@ function ReceiptContent() {
   const provider = providers.find((p) => p.id === ride?.provider);
   const paymentMethod = paymentMethods.find((p) => p.id === paymentId);
 
-  if (!destinationLabel || !ride || !provider || !token || !paymentMethod) {
+  if (!destinationLabel || !ride || !provider || !token || !paymentMethod || !driverName) {
     return (
        <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader>
@@ -90,6 +92,11 @@ function ReceiptContent() {
             <span className="font-semibold flex items-center gap-2"><RideIcon className="text-muted-foreground"/> Ride Type</span>
             <span>{ride.name}</span>
           </div>
+           <Separator />
+            <div className="flex justify-between items-center">
+                <span className="font-semibold flex items-center gap-2"><User className="text-muted-foreground"/> Driver</span>
+                <span>{driverName}</span>
+            </div>
            <Separator />
            <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><CreditCard className="text-muted-foreground"/> Paid With</span>
