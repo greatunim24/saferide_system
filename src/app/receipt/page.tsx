@@ -119,12 +119,12 @@ function ReceiptContent() {
         </Card>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-4 print:hidden">
-        <Button variant="outline" size="lg" className="py-7 text-lg" onClick={handlePrint}>
+        <Button variant="secondary" size="lg" className="py-7 text-lg" onClick={handlePrint}>
           <Printer className="mr-2 h-5 w-5" /> Print Receipt
         </Button>
         <Button 
           size="lg" 
-          className="py-7 text-lg bg-accent hover:bg-accent/90" 
+          className="py-7 text-lg" 
           onClick={() => router.push('/booking')}
         >
           New Ride
