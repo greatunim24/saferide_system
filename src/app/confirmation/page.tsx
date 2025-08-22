@@ -5,21 +5,29 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { allRides, destinations, providers, paymentMethods } from '@/lib/data';
-import { ArrowLeft, Car, User, Wallet, Building, MapPin, CreditCard } from 'lucide-react';
+import { ArrowLeft, Car, User, Wallet, Building, MapPin, CreditCard, Share2, MessageSquare, Copy } from 'lucide-react';
 import { Suspense, useMemo, useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Logo } from '@/components/Logo';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { shareRide, ShareRideInput } from '@/ai/flows/share-ride-flow';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 
 function ConfirmationContent() {
   const router = useRouter();
+  const { toast } = useToast();
   const searchParams = useSearchParams();
   const destinationValue = searchParams.get('destination');
   const rideId = searchParams.get('rideId');
 
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [bookingToken, setBookingToken] = useState<string | null>(null);
+  const [shareMessage, setShareMessage] = useState<string>('');
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+
 
   useEffect(() => {
     // Generate token only on the client-side to prevent hydration errors
@@ -34,6 +42,35 @@ function ConfirmationContent() {
 
   const ride = allRides.find((r) => r.id === rideId);
   const provider = providers.find((p) => p.id === ride?.provider);
+
+  const handleGenerateShareMessage = async () => {
+    if (!ride || !provider || !destinationLabel) return;
+    setIsGenerating(true);
+    try {
+      const input: ShareRideInput = {
+        destination: destinationLabel,
+        driverName: driver.name,
+        licensePlate: driver.plate,
+        provider: provider.name,
+      };
+      const result = await shareRide(input);
+      setShareMessage(result.message);
+    } catch (error) {
+      console.error("Failed to generate share message:", error);
+      setShareMessage("Sorry, I couldn't generate the message right now. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+  
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(shareMessage);
+    toast({
+      title: "Copied to clipboard!",
+      description: "You can now paste the message to share it.",
+    });
+  };
+
 
   if (!destinationLabel || !ride || !provider) {
     return (
@@ -158,6 +195,38 @@ function ConfirmationContent() {
         >
           Confirm & Pay
         </Button>
+        <div className="col-span-2">
+             <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="secondary" className="w-full" onClick={handleGenerateShareMessage}>
+                        <Share2 className="mr-2 h-4 w-4"/> Share Ride Details
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2"><MessageSquare/> Share Your Ride Details</DialogTitle>
+                    <DialogDescription>
+                      Copy this message and send it to a friend or family member for their peace of mind.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="py-4">
+                    {isGenerating ? (
+                       <div className="space-y-2">
+                          <Skeleton className="h-4 w-[250px]" />
+                          <Skeleton className="h-4 w-[200px]" />
+                        </div>
+                    ) : (
+                      <Textarea readOnly value={shareMessage} rows={5} className="text-base" />
+                    )}
+                  </div>
+                  <DialogFooter>
+                    <Button onClick={handleCopyToClipboard} disabled={isGenerating || !shareMessage}>
+                      <Copy className="mr-2 h-4 w-4"/> Copy Message
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+        </div>
       </CardFooter>
     </Card>
   );
