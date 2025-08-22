@@ -18,15 +18,22 @@ import { Separator } from '@/components/ui/separator';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useBooking } from '@/context/BookingContext';
 
 const baseFare = 15; // R15 base fare
 
 export default function BookingPage() {
   const router = useRouter();
+  const {
+    destination,
+    setDestination,
+    selectedProviders,
+    setSelectedProviders,
+    selectedRide,
+    setSelectedRide,
+  } = useBooking();
+    
   const [open, setOpen] = React.useState(false);
-  const [destination, setDestination] = React.useState('');
-  const [selectedProviders, setSelectedProviders] = React.useState<string[]>([]);
-  const [selectedRide, setSelectedRide] = React.useState<string | null>(null);
 
   // State for guest details
   const [isGuestModalOpen, setIsGuestModalOpen] = React.useState(false);

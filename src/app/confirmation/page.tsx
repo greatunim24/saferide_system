@@ -12,10 +12,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Logo } from '@/components/Logo';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { useBooking } from '@/context/BookingContext';
 
 function ConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { clearBooking } = useBooking();
+
   const destinationValue = searchParams.get('destination');
   const rideId = searchParams.get('rideId');
   const guestName = searchParams.get('guestName');
@@ -65,6 +68,21 @@ function ConfirmationContent() {
   
   const RideIcon = ride.icon;
   const ProviderIcon = provider.icon;
+
+  const handleConfirmAndPay = () => {
+    const params = new URLSearchParams({
+        destination: destinationValue,
+        rideId: rideId,
+        token: bookingToken!,
+        payment: paymentMethod!,
+        driverName: driver.name,
+    }).toString();
+
+    // Clear the booking state from session storage before navigating
+    clearBooking();
+
+    router.push(`/receipt?${params}`);
+  }
 
   return (
     <Card className="w-full max-w-lg shadow-2xl">
@@ -166,7 +184,7 @@ function ConfirmationContent() {
           size="lg" 
           className="py-7 text-lg transition-transform hover:scale-105" 
           disabled={!paymentMethod || !bookingToken}
-          onClick={() => router.push(`/receipt?destination=${destinationValue}&rideId=${rideId}&token=${bookingToken}&payment=${paymentMethod}&driverName=${encodeURIComponent(driver.name)}`)}
+          onClick={handleConfirmAndPay}
         >
           Confirm & Pay
         </Button>
