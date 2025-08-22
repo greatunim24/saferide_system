@@ -119,7 +119,7 @@ function ReceiptContent() {
         </Card>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-4 print:hidden">
-        <Button variant="secondary" size="lg" className="py-7 text-lg" onClick={handlePrint}>
+        <Button variant="outline" size="lg" className="py-7 text-lg" onClick={handlePrint}>
           <Printer className="mr-2 h-5 w-5" /> Print Receipt
         </Button>
         <Button 

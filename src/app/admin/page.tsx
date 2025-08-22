@@ -1,3 +1,4 @@
+
 'use client'
 
 import React from "react";
@@ -9,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { destinations, rideTypes } from "@/lib/data";
-import { Car, Gem, MapPin, Users, PlusCircle } from "lucide-react";
+import { Car, Gem, MapPin, Users, PlusCircle, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const rideTypeIcons: { [key: string]: React.ElementType } = {
@@ -24,7 +25,7 @@ export default function AdminPage() {
   return (
     <div className="w-full max-w-4xl mx-auto my-8">
        <Button variant="outline" onClick={() => router.push('/booking')} className="mb-4">
-          &larr; Back to App
+          <ArrowLeft className="mr-2 h-4 w-4"/> Back to App
         </Button>
       <Card>
         <CardHeader>
