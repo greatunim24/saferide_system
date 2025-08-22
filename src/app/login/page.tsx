@@ -23,21 +23,21 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-full relative">
-       <Button variant="outline" className="absolute top-8 left-8" onClick={() => router.push('/booking')}>
+    <div className="flex flex-col items-center justify-center min-h-screen w-full">
+      <Card className="w-full max-w-md shadow-2xl relative">
+        <Button variant="outline" className="absolute top-4 left-4" onClick={() => router.push('/booking')}>
            <ArrowLeft className="mr-2 h-4 w-4" />
            Back
         </Button>
-      <Card className="w-full max-w-md shadow-2xl">
         <form onSubmit={handleLogin}>
-          <CardHeader className="text-center space-y-4">
+          <CardHeader className="text-center space-y-4 pt-16">
             <div className="mx-auto">
               <Logo size="large" />
             </div>
             <CardTitle className="text-3xl font-bold font-headline">Welcome Back</CardTitle>
             <CardDescription className="text-lg">Enter your credentials to book a ride.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 p-8">
+          <CardContent className="space-y-6 px-8">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-md">Email or Phone</Label>
               <Input id="email" type="text" placeholder="you@example.com" required className="py-6 text-lg" />
