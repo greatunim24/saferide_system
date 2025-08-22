@@ -256,6 +256,11 @@ export default function BookingPage() {
                         <Label htmlFor="guest-phone" className="flex items-center gap-2"><Phone /> Phone Number</Label>
                         <Input id="guest-phone" type="tel" placeholder="e.g. 082 123 4567" value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} required />
                       </div>
+                      <div className='text-center pt-2'>
+                         <Button variant="link" onClick={() => router.push('/login')}>
+                            Already registered? Sign In
+                          </Button>
+                      </div>
                     </div>
                     <DialogFooter>
                       <Button type="submit">Confirm Booking</Button>
@@ -268,5 +273,3 @@ export default function BookingPage() {
     </Card>
   );
 }
-
-    
