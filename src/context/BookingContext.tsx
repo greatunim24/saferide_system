@@ -1,7 +1,9 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 type User = {
   name: string;
@@ -33,6 +35,10 @@ const BookingContext = createContext<BookingContextType | undefined>(undefined);
 
 const BOOKING_STATE_KEY = 'safeRideBookingState';
 
+// Inactivity timeouts in milliseconds
+const LOGOUT_TIMEOUT = 10 * 1000; // 10 seconds
+const APP_RESET_TIMEOUT = 40 * 1000; // 40 seconds
+
 export const BookingProvider = ({ children }: { children: ReactNode }) => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [state, setState] = useState<BookingState>({
@@ -42,6 +48,30 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     isAuthenticated: false,
     user: null,
   });
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const setAuth = useCallback((isAuthenticated: boolean, user: User | null) => {
+    setState((prevState) => ({ ...prevState, isAuthenticated, user }));
+  }, []);
+
+  const clearBooking = useCallback(() => {
+    setState((prevState) => ({
+      ...prevState,
+      destination: '',
+      selectedProviders: [],
+      selectedRide: null,
+    }));
+     if (typeof window !== 'undefined') {
+       try {
+         const clearedState = { ...state, destination: '', selectedProviders: [], selectedRide: null };
+         window.sessionStorage.setItem(BOOKING_STATE_KEY, JSON.stringify(clearedState));
+       } catch (error) {
+         console.error('Failed to save cleared booking state', error);
+       }
+     }
+  }, [state]);
+
 
   // Load state from sessionStorage on initial render
   useEffect(() => {
@@ -69,6 +99,51 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [state, isInitialLoad]);
 
+  // Inactivity timeout logic
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let logoutTimer: NodeJS.Timeout;
+    let resetTimer: NodeJS.Timeout;
+
+    const handleLogout = () => {
+       if (state.isAuthenticated) {
+          setAuth(false, null);
+          toast({
+            title: "Session Expired",
+            description: "You have been logged out due to inactivity.",
+          });
+       }
+    };
+
+    const handleReset = () => {
+        clearBooking();
+        router.push('/booking');
+         toast({
+            title: "App Reset",
+            description: "The booking has been cleared due to inactivity.",
+        });
+    }
+
+    const resetTimers = () => {
+      clearTimeout(logoutTimer);
+      clearTimeout(resetTimer);
+      logoutTimer = setTimeout(handleLogout, LOGOUT_TIMEOUT);
+      resetTimer = setTimeout(handleReset, APP_RESET_TIMEOUT);
+    };
+
+    const events = ['mousemove', 'keydown', 'click', 'scroll'];
+    events.forEach(event => window.addEventListener(event, resetTimers));
+    
+    resetTimers(); // Initialize timers
+
+    return () => {
+      clearTimeout(logoutTimer);
+      clearTimeout(resetTimer);
+      events.forEach(event => window.removeEventListener(event, resetTimers));
+    };
+  }, [state.isAuthenticated, setAuth, clearBooking, router, toast]);
+
   const setDestination = (destination: string) => {
     setState((prevState) => ({ ...prevState, destination, selectedRide: null })); // Reset ride when destination changes
   };
@@ -80,29 +155,6 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   const setSelectedRide = (ride: string | null) => {
     setState((prevState) => ({ ...prevState, selectedRide: ride }));
   };
-
-  const setAuth = (isAuthenticated: boolean, user: User | null) => {
-    setState((prevState) => ({ ...prevState, isAuthenticated, user }));
-  };
-
-  const clearBooking = () => {
-    // Keep auth state, clear only booking details
-    setState((prevState) => ({
-      ...prevState,
-      destination: '',
-      selectedProviders: [],
-      selectedRide: null,
-    }));
-     // Overwrite session storage with the cleared booking but preserved auth state
-     if (typeof window !== 'undefined') {
-       try {
-         const clearedState = { ...state, destination: '', selectedProviders: [], selectedRide: null };
-         window.sessionStorage.setItem(BOOKING_STATE_KEY, JSON.stringify(clearedState));
-       } catch (error) {
-         console.error('Failed to save cleared booking state', error);
-       }
-     }
-  }
 
   const contextValue = {
     ...state,
@@ -127,5 +179,3 @@ export const useBooking = () => {
   }
   return context;
 };
-
-    
