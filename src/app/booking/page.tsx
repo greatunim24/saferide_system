@@ -124,6 +124,11 @@ export default function BookingPage() {
                   onValueChange={(value) => {
                     setCustomDestination(value);
                     if(destination) setDestination('');
+                    if (!value) {
+                       setOpen(true);
+                    } else {
+                        setOpen(false);
+                    }
                   }}
                 />
                 <CommandEmpty>No destination found.</CommandEmpty>
