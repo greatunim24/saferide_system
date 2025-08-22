@@ -18,9 +18,41 @@ import { Separator } from '@/components/ui/separator';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 
 
 const baseFare = 15; // R15 base fare
+
+function DestinationList({
+  onSelect,
+  currentValue,
+}: {
+  onSelect: (value: string) => void;
+  currentValue: string;
+}) {
+  return (
+    <Command>
+      <CommandInput placeholder="Type or select a destination..." className="h-12 text-lg" />
+      <CommandEmpty>No destination found.</CommandEmpty>
+      <CommandList>
+        <CommandGroup>
+          {destinations.map((d) => (
+            <CommandItem
+              key={d.value}
+              value={d.value}
+              onSelect={() => onSelect(d.value)}
+              className="py-3 text-lg"
+            >
+              <Check className={cn('mr-2 h-5 w-5', currentValue === d.value ? 'opacity-100' : 'opacity-0')} />
+              {d.label}
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+}
 
 export default function BookingPage() {
   const router = useRouter();
@@ -29,6 +61,7 @@ export default function BookingPage() {
   const [selectedRide, setSelectedRide] = React.useState<string | null>(null);
     
   const [open, setOpen] = React.useState(false);
+  const isMobile = useIsMobile();
 
   // State for guest details
   const [isGuestModalOpen, setIsGuestModalOpen] = React.useState(false);
@@ -62,6 +95,11 @@ export default function BookingPage() {
   const selectedRideData = allRides.find(r => r.id === selectedRide);
   const destinationLabel = destinations.find((d) => d.value === destination)?.label;
 
+  const handleDestinationSelect = (currentValue: string) => {
+    setDestination(currentValue === destination ? '' : currentValue);
+    setOpen(false);
+    setSelectedRide(null);
+  };
 
   return (
     <Card className="w-full max-w-3xl shadow-2xl relative">
@@ -90,52 +128,46 @@ export default function BookingPage() {
               <p className="text-muted-foreground">Search or select your destination</p>
             </div>
           </div>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="w-full justify-between h-16 text-lg"
-              >
-                <div className="flex items-center">
-                  <MapPin className="mr-4 h-6 w-6 text-muted-foreground" />
-                  {destination
-                    ? destinations.find((d) => d.value === destination)?.label
-                    : 'Select a destination...'}
-                </div>
-                <ChevronsUpDown className="ml-2 h-5 w-5 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[--radix-popover-trigger-width] max-w-[calc(100vw-2rem)] p-0 md:w-auto">
-              <Command>
-                 <CommandInput 
-                  placeholder="Type or select a destination..." 
-                  className="h-12 text-lg"
-                />
-                <CommandEmpty>No destination found.</CommandEmpty>
-                <CommandList>
-                  <CommandGroup>
-                    {destinations.map((d) => (
-                      <CommandItem
-                        key={d.value}
-                        value={d.value}
-                        onSelect={(currentValue) => {
-                          setDestination(currentValue === destination ? '' : currentValue);
-                          setOpen(false);
-                          setSelectedRide(null);
-                        }}
-                        className="py-3 text-lg"
-                      >
-                        <Check className={cn('mr-2 h-5 w-5', destination === d.value ? 'opacity-100' : 'opacity-0')} />
-                        {d.label}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
+           {isMobile ? (
+              <Drawer open={open} onOpenChange={setOpen}>
+                <DrawerTrigger asChild>
+                  <Button variant="outline" className="w-full justify-between h-16 text-lg">
+                     <div className="flex items-center">
+                        <MapPin className="mr-4 h-6 w-6 text-muted-foreground" />
+                        {destinationLabel || 'Select a destination...'}
+                      </div>
+                      <ChevronsUpDown className="ml-2 h-5 w-5 shrink-0 opacity-50" />
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <div className="mt-4 border-t">
+                    <DestinationList onSelect={handleDestinationSelect} currentValue={destination} />
+                  </div>
+                </DrawerContent>
+              </Drawer>
+            ) : (
+               <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-full justify-between h-16 text-lg"
+                  >
+                    <div className="flex items-center">
+                      <MapPin className="mr-4 h-6 w-6 text-muted-foreground" />
+                       {destination
+                        ? destinations.find((d) => d.value === destination)?.label
+                        : 'Select a destination...'}
+                    </div>
+                    <ChevronsUpDown className="ml-2 h-5 w-5 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] max-w-[calc(100vw-2rem)] p-0 md:w-auto">
+                   <DestinationList onSelect={handleDestinationSelect} currentValue={destination} />
+                </PopoverContent>
+              </Popover>
+            )}
         </div>
 
         {destination && <Separator />}
