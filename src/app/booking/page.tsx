@@ -1,8 +1,9 @@
+
 'use client';
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, ChevronsUpDown, MapPin, Wallet, Car, User } from 'lucide-react';
+import { Check, ChevronsUpDown, MapPin, Wallet, Car, User, Phone } from 'lucide-react';
 
 import { destinations, providers, allRides, Ride } from '@/lib/data';
 import { cn } from '@/lib/utils';
@@ -16,6 +17,7 @@ import { Logo } from '@/components/Logo';
 import { Separator } from '@/components/ui/separator';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 const baseFare = 15; // R15 base fare
 
@@ -27,10 +29,24 @@ export default function BookingPage() {
   const [selectedProviders, setSelectedProviders] = React.useState<string[]>([]);
   const [selectedRide, setSelectedRide] = React.useState<string | null>(null);
 
+  // State for guest details
+  const [isGuestModalOpen, setIsGuestModalOpen] = React.useState(false);
+  const [guestName, setGuestName] = React.useState('');
+  const [guestPhone, setGuestPhone] = React.useState('');
+
+
   const handleBooking = () => {
     const finalDestination = customDestination || destination;
     if (finalDestination && selectedRide) {
       router.push(`/confirmation?destination=${finalDestination}&rideId=${selectedRide}`);
+    }
+  };
+
+  const handleGuestDetailsSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if(guestName && guestPhone) {
+        setIsGuestModalOpen(false);
+        handleBooking();
     }
   };
   
@@ -215,13 +231,42 @@ export default function BookingPage() {
 
         {/* Step 4: Book */}
         {finalDestinationValue && selectedRide && (
-          <div className="pt-4">
-            <Button onClick={handleBooking} className="w-full py-8 text-2xl font-bold transition-transform hover:scale-105">
-              Book {selectedRideData?.name} to {destinationLabel}
-            </Button>
-          </div>
+           <Dialog open={isGuestModalOpen} onOpenChange={setIsGuestModalOpen}>
+              <DialogTrigger asChild>
+                 <div className="pt-4">
+                    <Button className="w-full py-8 text-2xl font-bold transition-transform hover:scale-105">
+                      Book {selectedRideData?.name} to {destinationLabel}
+                    </Button>
+                  </div>
+              </DialogTrigger>
+              <DialogContent>
+                <form onSubmit={handleGuestDetailsSubmit}>
+                    <DialogHeader>
+                      <DialogTitle>Guest Details</DialogTitle>
+                      <DialogDescription>
+                        For your safety and the driver's, please provide your details.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="guest-name" className="flex items-center gap-2"><User /> Full Name</Label>
+                        <Input id="guest-name" placeholder="e.g. Lwazi Khumalo" value={guestName} onChange={(e) => setGuestName(e.target.value)} required />
+                      </div>
+                       <div className="space-y-2">
+                        <Label htmlFor="guest-phone" className="flex items-center gap-2"><Phone /> Phone Number</Label>
+                        <Input id="guest-phone" type="tel" placeholder="e.g. 082 123 4567" value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} required />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit">Confirm Booking</Button>
+                    </DialogFooter>
+                </form>
+              </DialogContent>
+           </Dialog>
         )}
       </CardContent>
     </Card>
   );
 }
+
+    
