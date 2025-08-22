@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { allRides, destinations, providers, paymentMethods } from '@/lib/data';
-import { ArrowLeft, MapPin, Printer, Wallet, CheckCircle, Building, CreditCard, User } from 'lucide-react';
+import { ArrowLeft, MapPin, Printer, Wallet, CheckCircle, Building, CreditCard, User, Users } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -25,6 +25,7 @@ function ReceiptContent() {
   const token = searchParams.get('token');
   const paymentId = searchParams.get('payment');
   const driverName = searchParams.get('driverName');
+  const guestName = searchParams.get('guestName');
 
   const destinationLabel = useMemo(() => {
     const predefined = destinations.find((d) => d.value === destinationValue);
@@ -98,6 +99,15 @@ function ReceiptContent() {
                 <span>{driverName}</span>
             </div>
            <Separator />
+            {guestName && (
+            <>
+              <div className="flex justify-between items-center">
+                <span className="font-semibold flex items-center gap-2"><Users className="text-muted-foreground"/> Rider</span>
+                <span>{guestName}</span>
+              </div>
+              <Separator />
+            </>
+           )}
            <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><CreditCard className="text-muted-foreground"/> Paid With</span>
              <span className="flex items-center gap-2 font-semibold">{paymentMethod.name} <PaymentIcon className="h-6 w-auto"/></span>

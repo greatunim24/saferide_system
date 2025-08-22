@@ -8,23 +8,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/Logo';
 import { ArrowLeft } from 'lucide-react';
-import { useBooking } from '@/context/BookingContext';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setAuth } = useBooking();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Mock authentication
-    const mockUser = { name: 'Registered User', phone: '0810001111' };
-    setAuth(true, mockUser);
     router.push('/booking');
   };
   
   const handleGuest = (e: React.MouseEvent) => {
     e.preventDefault();
-    setAuth(false, null);
     router.push('/booking');
   };
 

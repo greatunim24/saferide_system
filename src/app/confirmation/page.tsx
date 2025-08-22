@@ -12,12 +12,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Logo } from '@/components/Logo';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { useBooking } from '@/context/BookingContext';
 
 function ConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { clearBooking } = useBooking();
 
   const destinationValue = searchParams.get('destination');
   const rideId = searchParams.get('rideId');
@@ -76,12 +74,12 @@ function ConfirmationContent() {
         token: bookingToken!,
         payment: paymentMethod!,
         driverName: driver.name,
-    }).toString();
+    });
+    if (guestName) {
+      params.append('guestName', guestName);
+    }
 
-    // Clear the booking state from session storage before navigating
-    clearBooking();
-
-    router.push(`/receipt?${params}`);
+    router.push(`/receipt?${params.toString()}`);
   }
 
   return (

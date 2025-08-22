@@ -1,7 +1,7 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import { BookingProvider } from '@/context/BookingContext';
 
 export const metadata: Metadata = {
   title: 'SafeRide',
@@ -28,12 +28,10 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <BookingProvider>
           <main className="min-h-screen flex flex-col items-center justify-center p-4">
             {children}
           </main>
           <Toaster />
-        </BookingProvider>
       </body>
     </html>
   );
