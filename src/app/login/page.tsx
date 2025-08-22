@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/Logo';
+import { ArrowLeft } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -37,12 +38,13 @@ export default function LoginPage() {
               <Input id="pin" type="password" placeholder="••••" required className="py-6 text-lg" maxLength={4} />
             </div>
           </CardContent>
-          <CardFooter className="flex-col gap-4">
+          <CardFooter className="flex-col gap-4 p-8 pt-0">
             <Button type="submit" className="w-full py-7 text-xl font-bold transition-transform hover:scale-105">
               Sign In
             </Button>
-            <Button variant="link" onClick={() => router.push('/booking')}>
-              Continue as Guest
+            <Button variant="outline" className="w-full" onClick={() => router.push('/booking')}>
+               <ArrowLeft className="mr-2 h-4 w-4" />
+               Back to Booking
             </Button>
           </CardFooter>
         </form>
