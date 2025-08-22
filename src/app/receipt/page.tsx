@@ -67,10 +67,10 @@ function ReceiptContent() {
   return (
     <Card className="w-full max-w-lg shadow-2xl print:shadow-none print:border-none">
       <CardHeader className="text-center">
-        <div className="mx-auto mb-4 flex flex-col items-center gap-4 text-accent">
+        <div className="mx-auto mb-4 flex flex-col items-center gap-4 text-primary">
             <CheckCircle className="h-16 w-16" />
             <CardTitle className="text-4xl font-bold font-headline">Ride Confirmed!</CardTitle>
-            <CardDescription className="text-lg">Thank you for riding with SafeRide. Here is your receipt.</CardDescription>
+            <CardDescription className="text-lg text-muted-foreground">Thank you for riding with SafeRide. Here is your receipt.</CardDescription>
         </div>
       </CardHeader>
       <CardContent className="space-y-6 p-8">
