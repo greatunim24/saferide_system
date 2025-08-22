@@ -1,6 +1,6 @@
 
 import { Car, Gem, Users, CreditCard, Landmark, Apple } from 'lucide-react';
-import { Uber, Bolt, Didi } from '@/components/ProviderIcons';
+import { Uber, Bolt, InDrive, Maxima } from '@/components/ProviderIcons';
 
 export const destinations = [
   { value: 'uwc-innovation-hub', label: 'UWC Innovation Hub' },
@@ -18,7 +18,8 @@ export const destinations = [
 export const providers = [
   { id: 'uber', name: 'Uber', icon: Uber },
   { id: 'bolt', name: 'Bolt', icon: Bolt },
-  { id: 'didi', name: 'Didi', icon: Didi },
+  { id: 'indrive', name: 'inDrive', icon: InDrive },
+  { id: 'maxima', name: 'Maxima', icon: Maxima },
 ];
 
 export const paymentMethods = [
@@ -45,10 +46,14 @@ export const allRides: Ride[] = [
   { id: 'bolt-economy', provider: 'bolt', name: 'Bolt Economy', description: 'The quick and affordable option', icon: Car, priceMultiplier: 0.95 },
   { id: 'bolt-comfort', provider: 'bolt', name: 'Bolt Comfort', description: 'Executive cars for your comfort', icon: Gem, priceMultiplier: 1.35 },
   { id: 'bolt-xl', provider: 'bolt', name: 'Bolt XL', description: 'For when you need more space', icon: Users, priceMultiplier: 1.7 },
-  // Didi
-  { id: 'didi-economy', provider: 'didi', name: 'Didi Economy', description: 'Standard rides for your daily needs', icon: Car, priceMultiplier: 0.9 },
-  { id: 'didi-comfort', provider: 'didi', name: 'Didi Comfort', description: 'Travel in style and comfort', icon: Gem, priceMultiplier: 1.3 },
-  { id: 'didi-xl', provider: 'didi', name: 'Didi XL', description: 'Spacious cars for groups', icon: Users, priceMultiplier: 1.75 },
+  // inDrive
+  { id: 'indrive-economy', provider: 'indrive', name: 'inDrive Economy', description: 'You set the fare', icon: Car, priceMultiplier: 0.85 },
+  { id: 'indrive-comfort', provider: 'indrive', name: 'inDrive Comfort', description: 'Comfortable rides at your price', icon: Gem, priceMultiplier: 1.25 },
+  { id: 'indrive-xl', provider: 'indrive', name: 'inDrive XL', description: 'Large group rides, your fare', icon: Users, priceMultiplier: 1.65 },
+  // Maxima
+  { id: 'maxima-economy', provider: 'maxima', name: 'Maxima Economy', description: 'Cost-effective local rides', icon: Car, priceMultiplier: 0.8 },
+  { id: 'maxima-comfort', provider: 'maxima', name: 'Maxima Comfort', description: 'Relax in a better car', icon: Gem, priceMultiplier: 1.2 },
+  { id: 'maxima-xl', provider: 'maxima', name: 'Maxima XL', description: 'For the whole family', icon: Users, priceMultiplier: 1.6 },
 ];
 
 // This is kept for the admin page, but the booking flow will use `allRides`.

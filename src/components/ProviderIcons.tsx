@@ -26,14 +26,26 @@ export const Bolt = ({ className }: { className?: string }) => (
 );
 
 
-export const Didi = ({ className }: { className?: string }) => (
-    <svg 
-        className={className} 
-        viewBox="0 0 1024 1024" 
-        fill="currentColor" 
+export const InDrive = ({ className }: { className?: string }) => (
+    <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
     >
-        <path d="M839.2 440.8c-6.8-111.2-46.8-212.4-118.8-291.6C648.8 68.4 534.8 24 408.4 24 183.2 24 0 207.2 0 432.4c0 225.2 183.2 408.4 408.4 408.4 46 0 89.6-7.6 130-22.4l119.2 119.2c16 16 42 16 58 0 16-16 16-42 0-58L602.8 806.4c72-50.8 124-128.4 140.4-219.6 5.6-30.8 8.8-62.8 8.8-96.4s-3.2-65.6-8.8-96.8l85.2-72.8z M408.4 780.8c-192.4 0-348.4-156-348.4-348.4S216 84 408.4 84s348.4 156 348.4 348.4-156 348.4-348.4 348.4z" />
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+    </svg>
+);
+
+export const Maxima = ({ className }: { className?: string }) => (
+    <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+    >
+        <path d="M5 5v14h14V5H5zm2 2h2.5l2.5 5 2.5-5H17v10h-2V9l-2 4h-1l-2-4v8H7V7z" />
     </svg>
 );
