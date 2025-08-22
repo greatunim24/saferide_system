@@ -37,7 +37,7 @@ function ReceiptContent() {
           <CardDescription>The receipt details are missing or incorrect. Please start a new ride.</CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button onClick={() => router.push('/login')} className="w-full">
+          <Button onClick={() => router.push('/booking')} className="w-full">
             Start New Ride
           </Button>
         </CardFooter>
@@ -104,7 +104,7 @@ function ReceiptContent() {
         <Button 
           size="lg" 
           className="py-7 text-lg bg-accent hover:bg-accent/90" 
-          onClick={() => router.push('/login')}
+          onClick={() => router.push('/booking')}
         >
           New Ride
         </Button>

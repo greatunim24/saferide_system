@@ -23,7 +23,7 @@ export default function AdminPage() {
   
   return (
     <div className="w-full max-w-4xl mx-auto my-8">
-       <Button variant="outline" onClick={() => router.push('/login')} className="mb-4">
+       <Button variant="outline" onClick={() => router.push('/booking')} className="mb-4">
           &larr; Back to App
         </Button>
       <Card>
