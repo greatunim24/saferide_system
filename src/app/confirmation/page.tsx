@@ -20,7 +20,11 @@ function ConfirmationContent() {
 
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
 
-  const destination = destinations.find((d) => d.value === destinationValue);
+  const destinationLabel = useMemo(() => {
+    const predefined = destinations.find((d) => d.value === destinationValue);
+    return predefined?.label || destinationValue;
+  }, [destinationValue]);
+
   const ride = allRides.find((r) => r.id === rideId);
   const provider = providers.find((p) => p.id === ride?.provider);
   
@@ -28,7 +32,7 @@ function ConfirmationContent() {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
   }, []);
 
-  if (!destination || !ride || !provider) {
+  if (!destinationLabel || !ride || !provider) {
     return (
        <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader>
@@ -48,8 +52,8 @@ function ConfirmationContent() {
   const finalFare = baseFare * ride.priceMultiplier;
 
   const driver = {
-    name: 'John D.',
-    plate: '5F-387',
+    name: 'Lwazi K.',
+    plate: 'CA 123-456',
     rating: 4.9,
   };
   
@@ -79,7 +83,7 @@ function ConfirmationContent() {
            <Separator />
            <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><MapPin className="text-muted-foreground"/> To</span>
-            <span>{destination.label}</span>
+            <span>{destinationLabel}</span>
           </div>
         </div>
 

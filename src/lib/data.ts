@@ -2,13 +2,13 @@ import { Car, Gem, Users, CreditCard, Landmark, Apple } from 'lucide-react';
 import { Uber, Bolt, Didi } from '@/components/ProviderIcons';
 
 export const destinations = [
-  { value: 'airport', label: 'City Airport (AIR)' },
-  { value: 'downtown', label: 'Downtown Central Station' },
-  { value: 'mall', label: 'Grand Shopping Mall' },
-  { value: 'stadium',label: 'National Sports Stadium' },
-  { value: 'university', label: 'Metropolis University' },
-  { value: 'techpark', label: 'Innovatech Tech Park' },
-  { value: 'museum', label: 'Museum of Modern Art' },
+  { value: 'cpt-airport', label: 'Cape Town International Airport (CPT)' },
+  { value: 'va-waterfront', label: 'V&A Waterfront' },
+  { value: 'table-mountain', label: 'Table Mountain Cableway' },
+  { value: 'kirstenbosch', label: 'Kirstenbosch Gardens' },
+  { value: 'camps-bay', label: 'Camps Bay Beach' },
+  { value: 'ct-icc', label: 'Cape Town International Convention Centre' },
+  { value: 'boulders-beach', label: 'Boulders Beach Penguin Colony' },
 ];
 
 export const providers = [

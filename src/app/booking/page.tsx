@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/Logo';
 import { Separator } from '@/components/ui/separator';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Input } from '@/components/ui/input';
 
 const baseFare = 15; // R15 base fare
 
@@ -22,12 +23,14 @@ export default function BookingPage() {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [destination, setDestination] = React.useState('');
+  const [customDestination, setCustomDestination] = React.useState('');
   const [selectedProviders, setSelectedProviders] = React.useState<string[]>([]);
   const [selectedRide, setSelectedRide] = React.useState<string | null>(null);
 
   const handleBooking = () => {
-    if (destination && selectedRide) {
-      router.push(`/confirmation?destination=${destination}&rideId=${selectedRide}`);
+    const finalDestination = customDestination || destination;
+    if (finalDestination && selectedRide) {
+      router.push(`/confirmation?destination=${finalDestination}&rideId=${selectedRide}`);
     }
   };
   
@@ -39,8 +42,19 @@ export default function BookingPage() {
     return rides.sort((a, b) => a.priceMultiplier - b.priceMultiplier);
   }, [selectedProviders]);
 
+  const getDestinationLabel = () => {
+    if (customDestination) return customDestination;
+    if (destination) {
+      return destinations.find((d) => d.value === destination)?.label;
+    }
+    return 'Select or type destination...';
+  }
+
+  const finalDestinationValue = customDestination || destination;
   const selectedRideData = allRides.find(r => r.id === selectedRide);
   const selectedDestination = destinations.find((d) => d.value === destination);
+  const destinationLabel = customDestination || selectedDestination?.label;
+
 
   return (
     <Card className="w-full max-w-3xl shadow-2xl relative">
@@ -79,14 +93,22 @@ export default function BookingPage() {
               >
                 <div className="flex items-center">
                   <MapPin className="mr-4 h-6 w-6 text-muted-foreground" />
-                  {destination ? destinations.find((d) => d.value === destination)?.label : 'Select destination...'}
+                  {getDestinationLabel()}
                 </div>
                 <ChevronsUpDown className="ml-2 h-5 w-5 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[--radix-popover-trigger-width] max-w-[calc(100vw-2rem)] p-0 md:w-auto">
               <Command>
-                <CommandInput placeholder="Search destination..." className="h-12 text-lg" />
+                 <CommandInput 
+                  placeholder="Type or select a destination..." 
+                  className="h-12 text-lg" 
+                  value={customDestination}
+                  onValueChange={(value) => {
+                    setCustomDestination(value);
+                    if(destination) setDestination('');
+                  }}
+                />
                 <CommandEmpty>No destination found.</CommandEmpty>
                 <CommandList>
                   <CommandGroup>
@@ -96,6 +118,7 @@ export default function BookingPage() {
                         value={d.value}
                         onSelect={(currentValue) => {
                           setDestination(currentValue === destination ? '' : currentValue);
+                          setCustomDestination('');
                           setOpen(false);
                         }}
                         className="py-3 text-lg"
@@ -111,10 +134,10 @@ export default function BookingPage() {
           </Popover>
         </div>
 
-        {destination && <Separator />}
+        {finalDestinationValue && <Separator />}
 
         {/* Step 2: E-hailing Provider */}
-        {destination && (
+        {finalDestinationValue && (
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground">
@@ -144,10 +167,10 @@ export default function BookingPage() {
           </div>
         )}
 
-        {destination && <Separator />}
+        {finalDestinationValue && <Separator />}
 
         {/* Step 3: Ride Type */}
-        {destination && (
+        {finalDestinationValue && (
           <div className="space-y-4">
              <div className="flex items-center gap-4">
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground">
@@ -191,10 +214,10 @@ export default function BookingPage() {
         )}
 
         {/* Step 4: Book */}
-        {destination && selectedRide && (
+        {finalDestinationValue && selectedRide && (
           <div className="pt-4">
             <Button onClick={handleBooking} className="w-full py-8 text-2xl font-bold transition-transform hover:scale-105">
-              Book {selectedRideData?.name} to {selectedDestination?.label}
+              Book {selectedRideData?.name} to {destinationLabel}
             </Button>
           </div>
         )}

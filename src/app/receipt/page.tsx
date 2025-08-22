@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,12 +24,16 @@ function ReceiptContent() {
   const token = searchParams.get('token');
   const paymentId = searchParams.get('payment');
 
-  const destination = destinations.find((d) => d.value === destinationValue);
+  const destinationLabel = useMemo(() => {
+    const predefined = destinations.find((d) => d.value === destinationValue);
+    return predefined?.label || destinationValue;
+  }, [destinationValue]);
+
   const ride = allRides.find((r) => r.id === rideId);
   const provider = providers.find((p) => p.id === ride?.provider);
   const paymentMethod = paymentMethods.find((p) => p.id === paymentId);
 
-  if (!destination || !ride || !provider || !token || !paymentMethod) {
+  if (!destinationLabel || !ride || !provider || !token || !paymentMethod) {
     return (
        <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader>
@@ -79,7 +83,7 @@ function ReceiptContent() {
           <Separator />
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><MapPin className="text-muted-foreground"/> Destination</span>
-            <span>{destination.label}</span>
+            <span>{destinationLabel}</span>
           </div>
           <Separator />
           <div className="flex justify-between items-center">
