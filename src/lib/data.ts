@@ -1,4 +1,4 @@
-import { Car, Gem, Users, MapPin } from 'lucide-react';
+import { Car, Gem, Users, CreditCard, Landmark, Apple } from 'lucide-react';
 import { Uber, Bolt, Didi } from '@/components/ProviderIcons';
 
 export const destinations = [
@@ -16,6 +16,12 @@ export const providers = [
   { id: 'bolt', name: 'Bolt', icon: Bolt },
   { id: 'didi', name: 'Didi', icon: Didi },
 ];
+
+export const paymentMethods = [
+    { id: 'card', name: 'Card', icon: CreditCard },
+    { id: 'cash', name: 'Cash', icon: Landmark },
+    { id: 'apple-pay', name: 'Apple Pay', icon: Apple },
+]
 
 export type Ride = {
   id: string;

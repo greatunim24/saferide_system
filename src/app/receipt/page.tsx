@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { allRides, destinations, providers } from '@/lib/data';
-import { ArrowLeft, Car, Gem, MapPin, Printer, User, Users, Wallet, CheckCircle, Ticket, Building } from 'lucide-react';
+import { allRides, destinations, providers, paymentMethods } from '@/lib/data';
+import { ArrowLeft, MapPin, Printer, Wallet, CheckCircle, Building, CreditCard } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -22,13 +22,14 @@ function ReceiptContent() {
   const destinationValue = searchParams.get('destination');
   const rideId = searchParams.get('rideId');
   const token = searchParams.get('token');
+  const paymentId = searchParams.get('payment');
 
   const destination = destinations.find((d) => d.value === destinationValue);
   const ride = allRides.find((r) => r.id === rideId);
   const provider = providers.find((p) => p.id === ride?.provider);
+  const paymentMethod = paymentMethods.find((p) => p.id === paymentId);
 
-
-  if (!destination || !ride || !provider || !token) {
+  if (!destination || !ride || !provider || !token || !paymentMethod) {
     return (
        <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader>
@@ -48,6 +49,7 @@ function ReceiptContent() {
   const finalFare = baseFare * ride.priceMultiplier;
   const RideIcon = ride.icon;
   const ProviderIcon = provider.icon;
+  const PaymentIcon = paymentMethod.icon;
 
   const handlePrint = () => {
     if (isClient) {
@@ -83,6 +85,11 @@ function ReceiptContent() {
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><RideIcon className="text-muted-foreground"/> Ride Type</span>
             <span>{ride.name}</span>
+          </div>
+           <Separator />
+           <div className="flex justify-between items-center">
+            <span className="font-semibold flex items-center gap-2"><CreditCard className="text-muted-foreground"/> Paid With</span>
+             <span className="flex items-center gap-2 font-semibold">{paymentMethod.name} <PaymentIcon className="h-6 w-auto"/></span>
           </div>
         </div>
         <Card className="bg-primary text-primary-foreground text-center p-6">
@@ -121,6 +128,8 @@ function ReceiptSkeleton() {
                     <Separator/>
                     <Skeleton className="h-8 w-full" />
                     <Separator/>
+                    <Skeleton className="h-8 w-full" />
+                     <Separator/>
                     <Skeleton className="h-8 w-full" />
                 </div>
                  <Skeleton className="h-32 w-full" />
