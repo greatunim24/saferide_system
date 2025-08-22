@@ -18,11 +18,6 @@ export default function LoginPage() {
     router.push('/booking');
   };
   
-  const handleGuest = (e: React.MouseEvent) => {
-    e.preventDefault();
-    router.push('/booking');
-  };
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full">
       <Card className="w-full max-w-md shadow-2xl relative">
@@ -55,7 +50,7 @@ export default function LoginPage() {
             <Button variant="link" size="sm" className="w-full" onClick={() => router.push('/signup')}>
                Don't have an account? Sign Up
             </Button>
-            <Button variant="link" className="w-full mt-2" onClick={handleGuest}>
+            <Button variant="link" className="w-full mt-2" onClick={() => router.push('/booking')}>
                Continue as Guest
             </Button>
           </CardFooter>
