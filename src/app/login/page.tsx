@@ -37,9 +37,12 @@ export default function LoginPage() {
               <Input id="pin" type="password" placeholder="••••" required className="py-6 text-lg" maxLength={4} />
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex-col gap-4">
             <Button type="submit" className="w-full py-7 text-xl font-bold transition-transform hover:scale-105">
               Sign In
+            </Button>
+            <Button variant="link" onClick={() => router.push('/booking')}>
+              Continue as Guest
             </Button>
           </CardFooter>
         </form>

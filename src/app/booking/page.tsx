@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, ChevronsUpDown, MapPin, Wallet, Car } from 'lucide-react';
+import { Check, ChevronsUpDown, MapPin, Wallet, Car, User } from 'lucide-react';
 
 import { destinations, providers, allRides, Ride } from '@/lib/data';
 import { cn } from '@/lib/utils';
@@ -43,7 +43,13 @@ export default function BookingPage() {
   const selectedDestination = destinations.find((d) => d.value === destination);
 
   return (
-    <Card className="w-full max-w-3xl shadow-2xl">
+    <Card className="w-full max-w-3xl shadow-2xl relative">
+       <div className="absolute top-4 right-4">
+          <Button variant="ghost" size="icon" onClick={() => router.push('/login')}>
+            <User className="h-6 w-6" />
+            <span className="sr-only">Login</span>
+          </Button>
+        </div>
       <CardHeader className="text-center">
         <div className="mx-auto mb-4">
           <Logo />
