@@ -25,7 +25,8 @@ function ConfirmationContent() {
 
   useEffect(() => {
     // Generate token only on the client-side to prevent hydration errors
-    setBookingToken(Math.random().toString(36).substring(2, 8).toUpperCase());
+    const token = Math.floor(10000 + Math.random() * 90000).toString();
+    setBookingToken(token);
   }, []);
 
 
