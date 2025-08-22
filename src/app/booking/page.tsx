@@ -240,50 +240,48 @@ export default function BookingPage() {
 
         {/* Step 4: Book */}
         {destination && selectedRide && (
-           <Dialog open={isGuestModalOpen} onOpenChange={setIsGuestModalOpen}>
-              <DialogTrigger asChild>
-                 <div className="pt-4">
-                    <Button 
-                        className="w-full py-8 text-2xl font-bold transition-transform hover:scale-105"
-                        onClick={onBookButtonClick}
-                        >
-                      Book {selectedRideData?.name} to {destinationLabel}
-                    </Button>
-                  </div>
-              </DialogTrigger>
-              <DialogContent>
-                <form onSubmit={handleGuestDetailsSubmit}>
-                    <DialogHeader>
-                      <DialogTitle>Guest Details</DialogTitle>
-                      <DialogDescription>
-                        For your safety and the driver's, please provide your details.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="guest-name" className="flex items-center gap-2"><User /> Full Name</Label>
-                        <Input id="guest-name" placeholder="e.g. Lwazi Khumalo" value={guestName} onChange={(e) => setGuestName(e.target.value)} required />
-                      </div>
-                       <div className="space-y-2">
-                        <Label htmlFor="guest-phone" className="flex items-center gap-2"><Phone /> Phone Number</Label>
-                        <Input id="guest-phone" type="tel" placeholder="e.g. 082 123 4567" value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} required />
-                      </div>
-                      <div className='text-center pt-2'>
-                         <Button variant="link" onClick={() => router.push('/login')}>
-                            Already registered? Sign In
-                          </Button>
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <Button type="submit">Confirm Booking</Button>
-                    </DialogFooter>
-                </form>
-              </DialogContent>
-           </Dialog>
+           <div className="pt-4">
+              <Button 
+                  className="w-full py-8 text-2xl font-bold transition-transform hover:scale-105"
+                  onClick={onBookButtonClick}
+                  >
+                Book {selectedRideData?.name} to {destinationLabel}
+              </Button>
+            </div>
         )}
+        
+        <Dialog open={isGuestModalOpen} onOpenChange={setIsGuestModalOpen}>
+            <DialogContent>
+              <form onSubmit={handleGuestDetailsSubmit}>
+                  <DialogHeader>
+                    <DialogTitle>Guest Details</DialogTitle>
+                    <DialogDescription>
+                      For your safety and the driver's, please provide your details.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="guest-name" className="flex items-center gap-2"><User /> Full Name</Label>
+                      <Input id="guest-name" placeholder="e.g. Lwazi Khumalo" value={guestName} onChange={(e) => setGuestName(e.target.value)} required />
+                    </div>
+                     <div className="space-y-2">
+                      <Label htmlFor="guest-phone" className="flex items-center gap-2"><Phone /> Phone Number</Label>
+                      <Input id="guest-phone" type="tel" placeholder="e.g. 082 123 4567" value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} required />
+                    </div>
+                    <div className='text-center pt-2'>
+                       <Button variant="link" onClick={() => router.push('/login')}>
+                          Already registered? Sign In
+                        </Button>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button type="submit">Confirm Booking</Button>
+                  </DialogFooter>
+              </form>
+            </DialogContent>
+         </Dialog>
+
       </CardContent>
     </Card>
   );
 }
-
-    
