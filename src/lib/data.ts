@@ -38,22 +38,22 @@ export type Ride = {
 
 export const allRides: Ride[] = [
   // Uber
-  { id: 'uber-x', provider: 'uber', name: 'UberX', description: 'Affordable, everyday rides', icon: Car, priceMultiplier: 1.0 },
-  { id: 'uber-black', provider: 'uber', name: 'Uber Black', description: 'Premium rides in luxury cars', icon: Gem, priceMultiplier: 1.8 },
-  { id: 'uber-share', provider: 'uber', name: 'Uber Share', description: 'Share your ride and save', icon: Users, priceMultiplier: 0.7 },
+  { id: 'uber-economy', provider: 'uber', name: 'Uber Economy', description: 'Affordable, everyday rides', icon: Car, priceMultiplier: 1.0 },
+  { id: 'uber-comfort', provider: 'uber', name: 'Uber Comfort', description: 'Newer cars with more legroom', icon: Gem, priceMultiplier: 1.4 },
+  { id: 'uber-xl', provider: 'uber', name: 'Uber XL', description: 'Rides for groups up to 6', icon: Users, priceMultiplier: 1.8 },
   // Bolt
-  { id: 'bolt-standard', provider: 'bolt', name: 'Bolt', description: 'The quick and affordable option', icon: Car, priceMultiplier: 0.95 },
-  { id: 'bolt-premium', provider: 'bolt', name: 'Bolt Premium', description: 'Executive cars for your comfort', icon: Gem, priceMultiplier: 1.7 },
-  { id: 'bolt-share', provider: 'bolt', name: 'Bolt Share', description: 'Eco-friendly shared rides', icon: Users, priceMultiplier: 0.65 },
+  { id: 'bolt-economy', provider: 'bolt', name: 'Bolt Economy', description: 'The quick and affordable option', icon: Car, priceMultiplier: 0.95 },
+  { id: 'bolt-comfort', provider: 'bolt', name: 'Bolt Comfort', description: 'Executive cars for your comfort', icon: Gem, priceMultiplier: 1.35 },
+  { id: 'bolt-xl', provider: 'bolt', name: 'Bolt XL', description: 'For when you need more space', icon: Users, priceMultiplier: 1.7 },
   // Didi
-  { id: 'didi-express', provider: 'didi', name: 'Didi Express', description: 'Standard rides for your daily needs', icon: Car, priceMultiplier: 0.9 },
-  { id: 'didi-max', provider: 'didi', name: 'Didi Max', description: 'Spacious cars for groups', icon: Users, priceMultiplier: 1.2 },
-  { id: 'didi-premium', provider: 'didi', name: 'Didi Premium', description: 'Travel in style and comfort', icon: Gem, priceMultiplier: 1.75 },
+  { id: 'didi-economy', provider: 'didi', name: 'Didi Economy', description: 'Standard rides for your daily needs', icon: Car, priceMultiplier: 0.9 },
+  { id: 'didi-comfort', provider: 'didi', name: 'Didi Comfort', description: 'Travel in style and comfort', icon: Gem, priceMultiplier: 1.3 },
+  { id: 'didi-xl', provider: 'didi', name: 'Didi XL', description: 'Spacious cars for groups', icon: Users, priceMultiplier: 1.75 },
 ];
 
 // This is kept for the admin page, but the booking flow will use `allRides`.
 export const rideTypes = [
-  { id: 'standard', name: 'Standard', description: 'Affordable, everyday rides', icon: Car, priceMultiplier: 1.0 },
-  { id: 'premium', name: 'Premium', description: 'High-end cars, top drivers', icon: Gem, priceMultiplier: 1.8 },
-  { id: 'shared', name: 'Shared', description: 'Share with others, save money', icon: Users, priceMultiplier: 0.7 },
+  { id: 'economy', name: 'Economy', description: 'Affordable, everyday rides', icon: Car, priceMultiplier: 1.0 },
+  { id: 'comfort', name: 'Comfort', description: 'Full-size cars with more legroom', icon: Gem, priceMultiplier: 1.4 },
+  { id: 'xl', name: 'XL', description: 'Rides for groups up to 6', icon: Users, priceMultiplier: 1.8 },
 ];
