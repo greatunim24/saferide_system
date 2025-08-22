@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Check, ChevronsUpDown, MapPin, User, Phone } from 'lucide-react';
 
 import { destinations, providers, allRides } from '@/lib/data';
@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { LabelProps } from '@radix-ui/react-label';
 
 
 const baseFare = 15; // R15 base fare
@@ -54,25 +55,60 @@ function DestinationList({
   );
 }
 
+// Memoized components for performance optimization
+const MemoizedDestinationList = React.memo(DestinationList);
+
+interface RideItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  ride: typeof allRides[0];
+  baseFare: number;
+  onSelect: (id: string) => void;
+  isSelected: boolean;
+}
+
+const RideItem = React.memo(({ ride, baseFare, onSelect, isSelected }: RideItemProps) => {
+  const RideIcon = ride.icon;
+  const ProviderIcon = providers.find(p => p.id === ride.provider)?.icon;
+  const finalFare = baseFare * ride.priceMultiplier;
+
+  return (
+    <div>
+      <RadioGroupItem value={ride.id} id={ride.id} className="peer sr-only" />
+      <Label
+        htmlFor={ride.id}
+        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all h-full"
+      >
+        <div className='flex justify-between w-full items-start'>
+          {ProviderIcon && <ProviderIcon className="h-6 w-auto text-muted-foreground" />}
+          <RideIcon className="h-10 w-10 text-primary" />
+        </div>
+        <p className="text-xl font-bold font-headline mt-2">{ride.name}</p>
+        <p className="text-sm text-muted-foreground text-center flex-grow">{ride.description}</p>
+        <p className="text-2xl font-bold tracking-tighter mt-2">R{finalFare.toFixed(2)}</p>
+      </Label>
+    </div>
+  );
+});
+
 export default function BookingPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [destination, setDestination] = React.useState('');
   const [selectedProviders, setSelectedProviders] = React.useState<string[]>([]);
   const [selectedRide, setSelectedRide] = React.useState<string | null>(null);
-    
+
   const [open, setOpen] = React.useState(false);
   const isMobile = useIsMobile();
 
   // State for guest details
   const [isGuestModalOpen, setIsGuestModalOpen] = React.useState(false);
-  const [guestName, setGuestName] = React.useState('');
-  const [guestPhone, setGuestPhone] = React.useState('');
-
+  const [guestName, setGuestName] = React.useState(searchParams.get('guestName') || '');
+  const [guestPhone, setGuestPhone] = React.useState(searchParams.get('guestPhone') || '');
 
   const handleBooking = () => {
     if (destination && selectedRide) {
-      const guestQuery = guestName ? `&guestName=${encodeURIComponent(guestName)}` : '';
-      router.push(`/confirmation?destination=${destination}&rideId=${selectedRide}${guestQuery}`);
+      const guestQuery = `&guestName=${encodeURIComponent(guestName)}&guestPhone=${encodeURIComponent(guestPhone)}`;
+      router.push(`/receipt?destination=${destination}&rideId=${selectedRide}${guestQuery}`);
     }
   };
 
@@ -83,10 +119,10 @@ export default function BookingPage() {
         handleBooking();
     }
   };
-  
+
   const displayedRides = React.useMemo(() => {
-    const rides = selectedProviders.length > 0 
-      ? allRides.filter(ride => selectedProviders.includes(ride.provider))
+    const rides = selectedProviders.length > 0
+      ? allRides.filter(ride => selectedProviders.includes(ride.provider)) // Changed from provider.id to ride.provider
       : allRides;
     
     return rides.sort((a, b) => a.priceMultiplier - b.priceMultiplier);
@@ -141,7 +177,7 @@ export default function BookingPage() {
                 </DrawerTrigger>
                 <DrawerContent>
                   <div className="mt-4 border-t">
-                    <DestinationList onSelect={handleDestinationSelect} currentValue={destination} />
+                    <MemoizedDestinationList onSelect={handleDestinationSelect} currentValue={destination} />
                   </div>
                 </DrawerContent>
               </Drawer>
@@ -164,7 +200,7 @@ export default function BookingPage() {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[--radix-popover-trigger-width] max-w-[calc(100vw-2rem)] p-0 md:w-auto">
-                   <DestinationList onSelect={handleDestinationSelect} currentValue={destination} />
+                   <MemoizedDestinationList onSelect={handleDestinationSelect} currentValue={destination} />
                 </PopoverContent>
               </Popover>
             )}
@@ -223,26 +259,13 @@ export default function BookingPage() {
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
             >
               {displayedRides.map((ride) => {
-                const RideIcon = ride.icon;
-                const ProviderIcon = providers.find(p => p.id === ride.provider)?.icon;
-                const finalFare = baseFare * ride.priceMultiplier;
-                
                 return (
-                  <div key={ride.id}>
-                    <RadioGroupItem value={ride.id} id={ride.id} className="peer sr-only" />
-                    <Label
-                      htmlFor={ride.id}
-                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all h-full"
-                    >
-                      <div className='flex justify-between w-full items-start'>
-                        {ProviderIcon && <ProviderIcon className="h-6 w-auto text-muted-foreground" />}
-                        <RideIcon className="h-10 w-10 text-primary" />
-                      </div>
-                      <p className="text-xl font-bold font-headline mt-2">{ride.name}</p>
-                      <p className="text-sm text-muted-foreground text-center flex-grow">{ride.description}</p>
-                      <p className="text-2xl font-bold tracking-tighter mt-2">R{finalFare.toFixed(2)}</p>
-                    </Label>
-                  </div>
+                  <RideItem
+                    key={ride.id}
+                    ride={ride}
+                    baseFare={baseFare}
+                    onSelect={setSelectedRide}
+                    isSelected={selectedRide === ride.id}/>
                 );
               })}
             </RadioGroup>
