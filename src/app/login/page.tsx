@@ -16,9 +16,18 @@ export default function LoginPage() {
     // Mock authentication
     router.push('/booking');
   };
+  
+  const handleGuest = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push('/booking');
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-full">
+    <div className="flex flex-col items-center justify-center min-h-screen w-full relative">
+       <Button variant="outline" className="absolute top-8 left-8" onClick={() => router.push('/booking')}>
+           <ArrowLeft className="mr-2 h-4 w-4" />
+           Back
+        </Button>
       <Card className="w-full max-w-md shadow-2xl">
         <form onSubmit={handleLogin}>
           <CardHeader className="text-center space-y-4">
@@ -42,9 +51,8 @@ export default function LoginPage() {
             <Button type="submit" className="w-full py-7 text-xl font-bold transition-transform hover:scale-105">
               Sign In
             </Button>
-            <Button variant="outline" className="w-full" onClick={() => router.push('/booking')}>
-               <ArrowLeft className="mr-2 h-4 w-4" />
-               Back to Booking
+            <Button variant="link" className="w-full" onClick={handleGuest}>
+               Continue as Guest
             </Button>
           </CardFooter>
         </form>
