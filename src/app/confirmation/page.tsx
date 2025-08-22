@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -5,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { allRides, destinations, providers, paymentMethods } from '@/lib/data';
-import { ArrowLeft, Car, User, Wallet, Building, MapPin, CreditCard } from 'lucide-react';
+import { ArrowLeft, Car, User, Wallet, Building, MapPin, CreditCard, Users } from 'lucide-react';
 import { Suspense, useMemo, useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Logo } from '@/components/Logo';
@@ -17,6 +18,7 @@ function ConfirmationContent() {
   const searchParams = useSearchParams();
   const destinationValue = searchParams.get('destination');
   const rideId = searchParams.get('rideId');
+  const guestName = searchParams.get('guestName');
 
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [bookingToken, setBookingToken] = useState<string | null>(null);
@@ -55,8 +57,8 @@ function ConfirmationContent() {
   const finalFare = baseFare * ride.priceMultiplier;
 
   const driver = {
-    name: 'Lwazi K.',
-    plate: 'CA 123-456',
+    name: 'Jonga S.',
+    plate: 'CA 987-654',
     rating: 4.9,
   };
   
@@ -107,6 +109,15 @@ function ConfirmationContent() {
             <span>{ride.name}</span>
           </div>
            <Separator />
+           {guestName && (
+            <>
+              <div className="flex justify-between items-center">
+                <span className="font-semibold flex items-center gap-2"><Users className="text-muted-foreground"/> Rider</span>
+                <span>{guestName}</span>
+              </div>
+              <Separator />
+            </>
+           )}
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><User className="text-muted-foreground"/> Driver</span>
             <span>{driver.name} ({driver.rating} ★)</span>

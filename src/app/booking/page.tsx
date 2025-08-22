@@ -38,7 +38,8 @@ export default function BookingPage() {
   const handleBooking = () => {
     const finalDestination = customDestination || destination;
     if (finalDestination && selectedRide) {
-      router.push(`/confirmation?destination=${finalDestination}&rideId=${selectedRide}`);
+      const guestQuery = guestName ? `&guestName=${encodeURIComponent(guestName)}` : '';
+      router.push(`/confirmation?destination=${finalDestination}&rideId=${selectedRide}${guestQuery}`);
     }
   };
 
