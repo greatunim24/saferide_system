@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from '@/components/ui/separator';
 import { allRides, destinations, providers, paymentMethods } from '@/lib/data';
 import { ArrowLeft, Car, User, Wallet, Building, MapPin, CreditCard } from 'lucide-react';
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useMemo, useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Logo } from '@/components/Logo';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -19,6 +19,13 @@ function ConfirmationContent() {
   const rideId = searchParams.get('rideId');
 
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [bookingToken, setBookingToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Generate token only on the client-side to prevent hydration errors
+    setBookingToken(Math.random().toString(36).substring(2, 8).toUpperCase());
+  }, []);
+
 
   const destinationLabel = useMemo(() => {
     const predefined = destinations.find((d) => d.value === destinationValue);
@@ -27,10 +34,6 @@ function ConfirmationContent() {
 
   const ride = allRides.find((r) => r.id === rideId);
   const provider = providers.find((p) => p.id === ride?.provider);
-  
-  const bookingToken = useMemo(() => {
-    return Math.random().toString(36).substring(2, 8).toUpperCase();
-  }, []);
 
   if (!destinationLabel || !ride || !provider) {
     return (
@@ -72,7 +75,11 @@ function ConfirmationContent() {
       <CardContent className="space-y-6 p-8">
         <div className="p-4 border-2 border-dashed rounded-lg text-center">
           <p className="text-muted-foreground font-semibold">Your Booking Token</p>
-          <p className="text-4xl font-bold tracking-widest text-primary font-mono">{bookingToken}</p>
+          {bookingToken ? (
+             <p className="text-4xl font-bold tracking-widest text-primary font-mono">{bookingToken}</p>
+          ) : (
+            <Skeleton className="h-10 w-48 mx-auto mt-1" />
+          )}
         </div>
         
         <div className="space-y-4 text-lg">
@@ -146,7 +153,7 @@ function ConfirmationContent() {
         <Button 
           size="lg" 
           className="py-7 text-lg transition-transform hover:scale-105" 
-          disabled={!paymentMethod}
+          disabled={!paymentMethod || !bookingToken}
           onClick={() => router.push(`/receipt?destination=${destinationValue}&rideId=${rideId}&token=${bookingToken}&payment=${paymentMethod}`)}
         >
           Confirm & Pay
