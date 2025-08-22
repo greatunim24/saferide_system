@@ -31,6 +31,8 @@ export default function BookingPage() {
     setSelectedProviders,
     selectedRide,
     setSelectedRide,
+    isAuthenticated,
+    user
   } = useBooking();
     
   const [open, setOpen] = React.useState(false);
@@ -43,7 +45,14 @@ export default function BookingPage() {
 
   const handleBooking = () => {
     if (destination && selectedRide) {
-      const guestQuery = guestName ? `&guestName=${encodeURIComponent(guestName)}` : '';
+      let riderName = '';
+      if(isAuthenticated && user) {
+        riderName = user.name;
+      } else if (guestName) {
+        riderName = guestName;
+      }
+
+      const guestQuery = riderName ? `&guestName=${encodeURIComponent(riderName)}` : '';
       router.push(`/confirmation?destination=${destination}&rideId=${selectedRide}${guestQuery}`);
     }
   };
@@ -55,6 +64,14 @@ export default function BookingPage() {
         handleBooking();
     }
   };
+
+  const onBookButtonClick = () => {
+    if (isAuthenticated) {
+        handleBooking();
+    } else {
+        setIsGuestModalOpen(true);
+    }
+  }
   
   const displayedRides = React.useMemo(() => {
     const rides = selectedProviders.length > 0 
@@ -226,7 +243,10 @@ export default function BookingPage() {
            <Dialog open={isGuestModalOpen} onOpenChange={setIsGuestModalOpen}>
               <DialogTrigger asChild>
                  <div className="pt-4">
-                    <Button className="w-full py-8 text-2xl font-bold transition-transform hover:scale-105">
+                    <Button 
+                        className="w-full py-8 text-2xl font-bold transition-transform hover:scale-105"
+                        onClick={onBookButtonClick}
+                        >
                       Book {selectedRideData?.name} to {destinationLabel}
                     </Button>
                   </div>
@@ -265,3 +285,5 @@ export default function BookingPage() {
     </Card>
   );
 }
+
+    

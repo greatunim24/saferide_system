@@ -3,10 +3,17 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+type User = {
+  name: string;
+  phone: string;
+};
+
 type BookingState = {
   destination: string;
   selectedProviders: string[];
   selectedRide: string | null;
+  isAuthenticated: boolean;
+  user: User | null;
 };
 
 type BookingContextType = {
@@ -16,6 +23,9 @@ type BookingContextType = {
   setSelectedProviders: (providers: string[]) => void;
   selectedRide: string | null;
   setSelectedRide: (ride: string | null) => void;
+  isAuthenticated: boolean;
+  user: User | null;
+  setAuth: (isAuthenticated: boolean, user: User | null) => void;
   clearBooking: () => void;
 };
 
@@ -29,6 +39,8 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     destination: '',
     selectedProviders: [],
     selectedRide: null,
+    isAuthenticated: false,
+    user: null,
   });
 
   // Load state from sessionStorage on initial render
@@ -69,14 +81,26 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     setState((prevState) => ({ ...prevState, selectedRide: ride }));
   };
 
+  const setAuth = (isAuthenticated: boolean, user: User | null) => {
+    setState((prevState) => ({ ...prevState, isAuthenticated, user }));
+  };
+
   const clearBooking = () => {
-    setState({
-        destination: '',
-        selectedProviders: [],
-        selectedRide: null,
-    });
+    // Keep auth state, clear only booking details
+    setState((prevState) => ({
+      ...prevState,
+      destination: '',
+      selectedProviders: [],
+      selectedRide: null,
+    }));
+     // Overwrite session storage with the cleared booking but preserved auth state
      if (typeof window !== 'undefined') {
-        window.sessionStorage.removeItem(BOOKING_STATE_KEY);
+       try {
+         const clearedState = { ...state, destination: '', selectedProviders: [], selectedRide: null };
+         window.sessionStorage.setItem(BOOKING_STATE_KEY, JSON.stringify(clearedState));
+       } catch (error) {
+         console.error('Failed to save cleared booking state', error);
+       }
      }
   }
 
@@ -85,6 +109,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     setDestination,
     setSelectedProviders,
     setSelectedRide,
+    setAuth,
     clearBooking,
   };
 
@@ -102,3 +127,5 @@ export const useBooking = () => {
   }
   return context;
 };
+
+    
