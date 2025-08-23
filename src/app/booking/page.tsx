@@ -20,10 +20,9 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
-import { LabelProps } from '@radix-ui/react-label';
 
 
-const baseFare = 15; // R15 base fare
+const baseFare = 15; // R15 base fare (Convenience fee per ride booked)
 
 function DestinationList({
   onSelect,
@@ -161,7 +160,7 @@ export default function BookingPage() {
             </div>
             <div>
               <h3 className="text-2xl font-semibold font-headline">Where are you going?</h3>
-              <p className="text-muted-foreground">Search or select your destination</p>
+              <p className="text-muted-foreground">Search or select your destination...</p>
             </div>
           </div>
            {isMobile ? (
@@ -292,11 +291,11 @@ export default function BookingPage() {
                       <div className="grid gap-4 py-4">
                         <div className="space-y-2">
                           <Label htmlFor="guest-name" className="flex items-center gap-2"><User /> Full Name</Label>
-                          <Input id="guest-name" placeholder="e.g. Lwazi Khumalo" value={guestName} onChange={(e) => setGuestName(e.target.value)} required />
+                          <Input id="guest-name" placeholder="e.g. Phindile Dhlamini" value={guestName} onChange={(e) => setGuestName(e.target.value)} required />
                         </div>
                          <div className="space-y-2">
                           <Label htmlFor="guest-phone" className="flex items-center gap-2"><Phone /> Phone Number</Label>
-                          <Input id="guest-phone" type="tel" placeholder="e.g. 082 123 4567" value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} required />
+                          <Input id="guest-phone" type="tel" placeholder="069 123 4567" value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} required />
                         </div>
                         <div className='text-center pt-2'>
                            <Button variant="link" onClick={() => router.push('/login')}>

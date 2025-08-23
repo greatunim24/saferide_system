@@ -137,7 +137,9 @@ function ConfirmationContent() {
            )}
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><User className="text-muted-foreground"/> Driver</span>
-            <span>{driver.name} ({driver.rating} ★)</span>
+            <span>
+              {driver.name} ({driver.rating} <span className="text-yellow-400">★</span>)
+            </span>
           </div>
            <Separator />
            <div className="flex justify-between items-center">

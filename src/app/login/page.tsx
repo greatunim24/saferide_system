@@ -14,7 +14,7 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock authentication
+    // Mock/Demo authentication
     router.push('/booking');
   };
   

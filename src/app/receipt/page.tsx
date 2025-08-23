@@ -8,7 +8,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from '@/components/ui/separator';
 import { allRides, destinations, providers, paymentMethods } from '@/lib/data';
 import { ArrowLeft, MapPin, Printer, Wallet, CheckCircle, Building, CreditCard, User, Users } from 'lucide-react';
-import { Logo } from '@/components/Logo';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function ReceiptContent() {
@@ -52,7 +51,7 @@ function ReceiptContent() {
     );
   }
 
-  const baseFare = 15;
+  const baseFare = 15; //Base fare
   const finalFare = baseFare * ride.priceMultiplier;
   const RideIcon = ride.icon;
   const ProviderIcon = provider.icon;
