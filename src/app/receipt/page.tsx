@@ -54,7 +54,7 @@ function ReceiptContent() {
   const baseFare = 15; //Base fare
   const finalFare = baseFare * ride.priceMultiplier;
   const RideIcon = ride.icon;
-  const ProviderIcon = provider.icon;
+  const providerIconPath = provider.icon;
   const PaymentIcon = paymentMethod.icon;
 
   const handlePrint = () => {
@@ -78,9 +78,9 @@ function ReceiptContent() {
           <p className="text-4xl font-bold tracking-widest text-primary font-mono">{token}</p>
         </div>
         <div className="space-y-4 text-lg">
-           <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><Building className="text-muted-foreground"/> Provider</span>
-            <span className="flex items-center gap-2 font-semibold">{provider.name} <ProviderIcon className="h-6 w-auto"/></span>
+            <span className="flex items-center gap-2 font-semibold">{provider.name} <img src={providerIconPath} alt={provider.name} style={{height: 24, width: 'auto', objectFit: 'contain', display: 'inline-block', verticalAlign: 'middle'}} /></span>
           </div>
           <Separator />
           <div className="flex justify-between items-center">

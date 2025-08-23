@@ -1,6 +1,6 @@
 
 import { Car, Gem, Users, CreditCard, Apple } from 'lucide-react';
-import { Uber, Bolt, InDrive, Maxima } from '@/components/ProviderIcons';
+
 
 export const destinations = [
   { value: 'uwc-innovation-hub', label: 'UWC Innovation Hub' },
@@ -15,11 +15,12 @@ export const destinations = [
   { value: 'boulders-beach', label: 'Boulders Beach Penguin Colony' },
 ];
 
+
 export const providers = [
-  { id: 'uber', name: 'Uber', icon: Uber },
-  { id: 'bolt', name: 'Bolt', icon: Bolt },
-  { id: 'indrive', name: 'inDrive', icon: InDrive },
-  { id: 'maxima', name: 'Maxima', icon: Maxima },
+  { id: 'uber', name: 'Uber', icon: '/assets/providers/uber.png' },
+  { id: 'bolt', name: 'Bolt', icon: '/assets/providers/bolt.png' },
+  { id: 'indrive', name: 'inDrive', icon: '/assets/providers/indriver_logo.png' },
+  { id: 'maxima', name: 'Maxima', icon: '/assets/providers/maxim_logo.png' },
 ];
 
 export const paymentMethods = [

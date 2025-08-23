@@ -65,7 +65,7 @@ function ConfirmationContent() {
   };
   
   const RideIcon = ride.icon;
-  const ProviderIcon = provider.icon;
+  const providerIconPath = provider.icon;
 
   const handleConfirmAndPay = () => {
     const params = new URLSearchParams({
@@ -118,7 +118,7 @@ function ConfirmationContent() {
         <div className="space-y-4 text-lg">
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><Building className="text-muted-foreground"/> Provider</span>
-            <span className="flex items-center gap-2 font-semibold">{provider.name} <ProviderIcon className="h-6 w-auto"/></span>
+            <span className="flex items-center gap-2 font-semibold">{provider.name} <img src={providerIconPath} alt={provider.name} style={{height: 24, width: 'auto', objectFit: 'contain', display: 'inline-block', verticalAlign: 'middle'}} /></span>
           </div>
            <Separator />
           <div className="flex justify-between items-center">
