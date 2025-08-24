@@ -93,10 +93,16 @@ const RideItem = React.memo(({ ride, baseFare, onSelect, isSelected }: RideItemP
 
 
 import { Suspense } from 'react';
+import BookingPageContent from './BookingPageContent';  
 
 function BookingPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  //const searchParams = useSearchParams();
+  export default function BookingPage() {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <BookingPageContent />
+      </Suspense>
 
   const [destination, setDestination] = React.useState('');
   const [selectedProviders, setSelectedProviders] = React.useState<string[]>([]);
