@@ -14,6 +14,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 
 function ReceiptContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isClient, setIsClient] = useState(false);
+  const [localData, setLocalData] = useState<any>(null);
+  const [driver, setDriver] = useState<any>(null);
   // Auto-redirect to booking page after 5 seconds
   useEffect(() => {
     if (isClient) {
@@ -23,11 +28,6 @@ function ReceiptContent() {
       return () => clearTimeout(timer);
     }
   }, [isClient, router]);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [isClient, setIsClient] = useState(false);
-  const [localData, setLocalData] = useState<any>(null);
-  const [driver, setDriver] = useState<any>(null);
 
   // Prefer query params, fallback to localStorage
   const destinationValue = searchParams.get('destination') || localData?.destination;
