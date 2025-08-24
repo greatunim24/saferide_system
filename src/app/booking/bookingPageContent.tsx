@@ -159,13 +159,13 @@ export default function BookingPageContent() {
           <Logo size="default" />
         </div>
         <CardTitle className="text-3xl text-center">Book Your Ride</CardTitle>
-        <CardDescription className="text-center">
+        <CardDescription className="text-center mb-8">
           Select your destination and ride preference
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-1">
-          <Label htmlFor="destination" className="text-lg font-medium">
+          <Label htmlFor="destination" className="font-bold mb-1 block" style={{ fontSize: 26 }}>
             Where are you going?
           </Label>
           <Popover open={open} onOpenChange={setOpen}>
@@ -204,7 +204,8 @@ export default function BookingPageContent() {
           <>
             <Separator />
             <div className="space-y-1">
-              <Label className="text-lg font-medium">Choose your provider</Label>
+              <Label className="font-bold mb-1 block" style={{ fontSize: 26 }}>Choose your provider</Label>
+              <div className="text-sm text-muted-foreground mb-2">Select one or more to see options</div>
               <ToggleGroup
                 type="multiple"
                 className="grid grid-cols-3 gap-2"
@@ -231,7 +232,8 @@ export default function BookingPageContent() {
             <Separator />
 
             <div>
-              <Label className="text-lg font-medium mb-2 block">Choose your ride</Label>
+              <Label className="font-bold mb-1 block" style={{ fontSize: 26 }}>Choose your ride</Label>
+              <div className="text-sm text-muted-foreground mb-2">Sorted from cheapest to most expensive</div>
               <RadioGroup
                 value={selectedRide ?? ''}
                 onValueChange={setSelectedRide}
@@ -257,7 +259,7 @@ export default function BookingPageContent() {
                 disabled={!selectedRide}
                 onClick={() => setIsGuestModalOpen(true)}
               >
-                Continue to Guest Details
+                {`Book to ${destinationLabel || 'Destination'}`}
               </Button>
             </div>
           </>
