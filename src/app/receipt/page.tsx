@@ -121,6 +121,7 @@ function ReceiptContent() {
             <span className="font-semibold flex items-center gap-2"><MapPin className="text-muted-foreground"/> Destination</span>
             <span>{destinationLabel}</span>
           </div>
+          <Separator />
         <div className="space-y-4 text-lg">
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><Building className="text-muted-foreground"/> Provider</span>
