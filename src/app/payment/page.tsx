@@ -112,6 +112,8 @@ function PaymentContent() {
           
         </div>
 
+        <Separator />
+
         
 
         <div>

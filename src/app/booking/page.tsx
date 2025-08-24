@@ -58,7 +58,7 @@ function DestinationList({
 // Memoized components for performance optimization
 const MemoizedDestinationList = React.memo(DestinationList);
 
-interface RideItemProps extends React.HTMLAttributes<HTMLDivElement> {
+interface RideItemProps {
   ride: typeof allRides[0];
   baseFare: number;
   onSelect: (id: string) => void;
@@ -179,7 +179,7 @@ export default function BookingPage() {
             </div>
             <div>
               <h3 className="text-2xl font-semibold font-headline">Where are you going?</h3>
-              <p className="text-muted-foreground">Search or select your destination...</p>
+              <p className="text-muted-foreground">Search or select your destination</p>
             </div>
           </div>
            {isMobile ? (

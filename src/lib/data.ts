@@ -12,7 +12,7 @@ export const drivers = [
   { name: 'Jason Mthembu', plate: 'CAA 901-234', rating: 5.0 },
 ];
 
-import { Car, Gem, Users, CreditCard, Apple } from 'lucide-react';
+import { Car, Gem, Users, CreditCard, Banknote } from 'lucide-react';
 
 
 export const destinations = [
@@ -31,17 +31,16 @@ export const destinations = [
 
 
 export const providers = [
-  { id: 'uber', name: 'Uber', icon: '/assets/providers/uber.png' },
+  { id: 'uber', name: 'Uber', icon: '/assets/providers/uber_logo.png' },
   { id: 'bolt', name: 'Bolt', icon: '/assets/providers/bolt.png' },
   { id: 'indrive', name: 'inDrive', icon: '/assets/providers/indriver_logo.png' },
   { id: 'maxima', name: 'Maxima', icon: '/assets/providers/maxim_logo.png' },
 ];
 
 export const paymentMethods = [
-    { id: 'card', name: 'Card', icon: CreditCard },
-    { id: 'cash', name: 'Cash', icon: CreditCard },
-    { id: 'apple-pay', name: 'Apple Pay', icon: Apple },
-]
+  { id: 'card', name: 'Card', icon: CreditCard },
+  { id: 'cash', name: 'Cash', icon: Banknote },
+];
 
 export type Ride = {
   id: string;

@@ -57,7 +57,7 @@ function ReceiptContent() {
     setDriver(drivers[Math.floor(Math.random() * drivers.length)]);
   }, [searchParams]);
 
-  if (!driver) return null; // or a loading skeleton
+  if (!isClient || !driver) return null; // or a loading skeleton
 
   const ride = allRides.find((r) => r.id === rideId);
   const provider = providers.find((p) => p.id === ride?.provider);
@@ -79,9 +79,16 @@ function ReceiptContent() {
     );
   }
 
-  // Use fare from localStorage if available
+  // Use fare from localStorage if available, else randomize but never less than 23
   const baseFare = 15;
-  const finalFare = localData?.finalFare || baseFare * ride.priceMultiplier;
+  let finalFare = localData?.finalFare || baseFare * ride.priceMultiplier;
+  if (!localData?.finalFare) {
+    // Randomize but never less than 23
+    const minFare = 23;
+    if (finalFare < minFare) {
+      finalFare = minFare;
+    }
+  }
   const RideIcon = ride.icon;
   const providerIconPath = provider.icon;
   const PaymentIcon = paymentMethod.icon;
@@ -109,6 +116,11 @@ function ReceiptContent() {
           <p className="text-muted-foreground font-semibold">Booking Token</p>
           <p className="text-4xl font-bold tracking-widest text-primary font-mono">{token}</p>
         </div>
+        <Separator />
+          <div className="flex justify-between items-center">
+            <span className="font-semibold flex items-center gap-2"><MapPin className="text-muted-foreground"/> Destination</span>
+            <span>{destinationLabel}</span>
+          </div>
         <div className="space-y-4 text-lg">
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><Building className="text-muted-foreground"/> Provider</span>
@@ -117,11 +129,7 @@ function ReceiptContent() {
               <Image src={providerIconPath} alt={provider.name} width={24} height={24} className="h-6 w-auto object-contain inline-block align-middle" />
             </span>
           </div>
-          <Separator />
-          <div className="flex justify-between items-center">
-            <span className="font-semibold flex items-center gap-2"><MapPin className="text-muted-foreground"/> Destination</span>
-            <span>{destinationLabel}</span>
-          </div>
+          
           <Separator />
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><RideIcon className="text-muted-foreground"/> Ride Type</span>
