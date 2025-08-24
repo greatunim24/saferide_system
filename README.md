@@ -1,5 +1,18 @@
-# SafeRide SYSTEM
+# SafeRide System 
 
-This is a NextJS starter.
+Bridging the digital devide by connecting every commuter to affordable reliable transport
 
-To get started, take a look at src/app/page.tsx.
+##  Tech Stack
+- **Next.js** – Fast, scalable React framework
+- **TypeScript** – Type-safe development
+- **Tailwind CSS** – Utility-first styling
+- **Vercel** – Hosting and backend services
+
+##  Project Structure
+- `src/` – Core app logic and pages
+- `public/` – Static assets
+- `docs/` – Documentation and setup notes
+- `apphosting.yaml` – hosting config
+
+
+
