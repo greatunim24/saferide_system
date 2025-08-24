@@ -91,7 +91,10 @@ const RideItem = React.memo(({ ride, baseFare, onSelect, isSelected }: RideItemP
   );
 });
 
-export default function BookingPage() {
+
+import { Suspense } from 'react';
+
+function BookingPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -334,5 +337,13 @@ export default function BookingPage() {
 
       </CardContent>
     </Card>
+  );
+}
+
+export default function BookingPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BookingPageContent />
+    </Suspense>
   );
 }
