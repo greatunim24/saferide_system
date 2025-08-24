@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Check, ChevronsUpDown, MapPin, User, Phone } from 'lucide-react';
 
 import { destinations, providers, allRides } from '@/lib/data';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
@@ -66,7 +67,7 @@ interface RideItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const RideItem = React.memo(({ ride, baseFare, onSelect, isSelected }: RideItemProps) => {
   const RideIcon = ride.icon;
-  const ProviderIcon = providers.find(p => p.id === ride.provider)?.icon;
+  const providerIconPath = providers.find(p => p.id === ride.provider)?.icon;
   const finalFare = baseFare * ride.priceMultiplier;
 
   return (
@@ -77,7 +78,9 @@ const RideItem = React.memo(({ ride, baseFare, onSelect, isSelected }: RideItemP
         className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all h-full"
       >
         <div className='flex justify-between w-full items-start'>
-          {ProviderIcon && <ProviderIcon className="h-6 w-auto text-muted-foreground" />}
+          {providerIconPath && (
+            <Image src={providerIconPath} alt={ride.provider} width={24} height={24} className="h-6 w-auto object-contain" />
+          )}
           <RideIcon className="h-10 w-10 text-primary" />
         </div>
         <p className="text-xl font-bold font-headline mt-2">{ride.name}</p>
@@ -106,14 +109,30 @@ export default function BookingPage() {
 
   const handleBooking = () => {
     if (destination && selectedRide) {
-      const guestQuery = `&guestName=${encodeURIComponent(guestName)}&guestPhone=${encodeURIComponent(guestPhone)}`;
-      router.push(`/receipt?destination=${destination}&rideId=${selectedRide}${guestQuery}`);
+      // Generate random 5-digit token
+      const token = Math.floor(10000 + Math.random() * 90000).toString();
+      // Get ride and fare
+      const ride = allRides.find(r => r.id === selectedRide);
+      const baseFare = 15;
+      const finalFare = ride ? baseFare * ride.priceMultiplier : 0;
+      // Store booking details in localStorage
+      const bookingDetails = {
+        destination,
+        rideId: selectedRide,
+        guestName,
+        guestPhone,
+        token,
+        finalFare,
+      };
+      localStorage.setItem('saferide_booking', JSON.stringify(bookingDetails));
+      const guestQuery = `&guestName=${encodeURIComponent(guestName)}&guestPhone=${encodeURIComponent(guestPhone)}&token=${token}`;
+      router.push(`/payment?destination=${destination}&rideId=${selectedRide}${guestQuery}`);
     }
   };
 
   const handleGuestDetailsSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if(guestName && guestPhone) {
+    if(guestName.trim() && guestPhone.trim()) {
         setIsGuestModalOpen(false);
         handleBooking();
     }
@@ -221,7 +240,8 @@ export default function BookingPage() {
             </div>
             <ToggleGroup type="multiple" value={selectedProviders} onValueChange={(value) => {setSelectedProviders(value); setSelectedRide(null);}} className="grid grid-cols-3 gap-4">
               {providers.map((p) => {
-                const ProviderIcon = p.icon;
+                // Ensure icon path is correct for public directory
+                const iconPath = p.icon.startsWith('/assets/') ? p.icon : `/assets/providers/${p.icon}`;
                 return (
                   <ToggleGroupItem
                     key={p.id}
@@ -229,7 +249,7 @@ export default function BookingPage() {
                     aria-label={`Select ${p.name}`}
                     className="flex flex-col h-24 p-4 border-2 data-[state=on]:border-primary transition-all"
                   >
-                    <ProviderIcon className="h-10 w-auto" />
+                    <Image src={iconPath} alt={p.name} width={40} height={40} className="h-10 w-auto object-contain" />
                     <span className="mt-2 text-lg font-semibold">{p.name}</span>
                   </ToggleGroupItem>
                 );

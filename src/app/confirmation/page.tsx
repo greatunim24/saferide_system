@@ -21,8 +21,10 @@ function ConfirmationContent() {
   const rideId = searchParams.get('rideId');
   const guestName = searchParams.get('guestName');
 
-  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [bookingToken, setBookingToken] = useState<string | null>(null);
+
+  // Get payment method from query params
+  const paymentMethod = searchParams.get('payment');
 
   useEffect(() => {
     // Generate token only on the client-side to prevent hydration errors
@@ -39,7 +41,7 @@ function ConfirmationContent() {
   const ride = allRides.find((r) => r.id === rideId);
   const provider = providers.find((p) => p.id === ride?.provider);
 
-  if (!destinationLabel || !ride || !provider) {
+  if (!destinationLabel || !ride || !provider || !paymentMethod) {
     return (
        <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader>
@@ -69,18 +71,17 @@ function ConfirmationContent() {
 
   const handleConfirmAndPay = () => {
     const params = new URLSearchParams({
-        destination: destinationValue,
-        rideId: rideId,
-        token: bookingToken!,
-        payment: paymentMethod!,
-        driverName: driver.name,
+      destination: destinationValue!,
+      rideId: rideId!,
+      token: bookingToken!,
+      payment: paymentMethod!,
+      driverName: driver.name,
     });
     if (guestName) {
       params.append('guestName', guestName);
     }
-
     router.push(`/receipt?${params.toString()}`);
-  }
+  };
 
   return (
     <Card className="w-full max-w-lg shadow-2xl">
@@ -152,29 +153,20 @@ function ConfirmationContent() {
 
         <div>
           <h3 className="text-2xl font-semibold font-headline mb-4 flex items-center gap-2"><CreditCard /> Payment Method</h3>
-          <RadioGroup value={paymentMethod ?? ''} onValueChange={setPaymentMethod} className="grid grid-cols-3 gap-4">
-              {paymentMethods.map((method) => {
-                const Icon = method.icon;
-                return (
-                  <div key={method.id}>
-                    <RadioGroupItem value={method.id} id={method.id} className="peer sr-only" />
-                    <Label
-                      htmlFor={method.id}
-                      className="flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all h-24"
-                    >
-                      <Icon className="h-8 w-8 text-primary" />
-                      <p className="text-lg font-semibold mt-2">{method.name}</p>
-                    </Label>
-                  </div>
-                );
-              })}
-            </RadioGroup>
+          <div className="flex items-center gap-2">
+            {(() => {
+              const method = paymentMethods.find((m) => m.id === paymentMethod);
+              if (!method) return null;
+              const Icon = method.icon;
+              return (
+                <span className="flex items-center gap-2 font-semibold">
+                  <Icon className="h-8 w-8 text-primary" />
+                  <span className="text-lg font-semibold mt-2">{method.name}</span>
+                </span>
+              );
+            })()}
+          </div>
         </div>
-        
-        <Card className="bg-primary text-primary-foreground text-center p-6">
-          <CardTitle className="flex items-center justify-center gap-2 text-xl"><Wallet/> Estimated Fare</CardTitle>
-          <p className="text-5xl font-bold tracking-tighter mt-2">R{finalFare.toFixed(2)}</p>
-        </Card>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-4">
         <Button variant="outline" size="lg" className="py-7 text-lg" onClick={() => router.back()}>
@@ -183,10 +175,10 @@ function ConfirmationContent() {
         <Button 
           size="lg" 
           className="py-7 text-lg transition-transform hover:scale-105" 
-          disabled={!paymentMethod || !bookingToken}
+          disabled={!bookingToken}
           onClick={handleConfirmAndPay}
         >
-          Confirm & Pay
+          Confirm Ride
         </Button>
       </CardFooter>
     </Card>

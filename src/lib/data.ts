@@ -1,3 +1,16 @@
+// Mock drivers for Cape Town ( names, CAA plates, and ratings)
+export const drivers = [
+  { name: 'Lwazi Mbeki', plate: 'CAA 123-456', rating: 4.9 },
+  { name: 'Sipho Dlamini', plate: 'CAA 654-321', rating: 3.8 },
+  { name: 'Noluthando Jacobs', plate: 'CAA 234-567', rating: 4.7 },
+  { name: 'Thabo Williams', plate: 'CAA 345-678', rating: 4.6 },
+  { name: 'Ayanda Smith', plate: 'CAA 456-789', rating: 4.9 },
+  { name: 'Sibusiso Johnson', plate: 'CAA 567-890', rating: 4.8 },
+  { name: 'Nomsa Daniels', plate: 'CAA 678-901', rating: 3.7 },
+  { name: 'Lindelwa Brown', plate: 'CAA 789-012', rating: 4.8 },
+  { name: 'Zanele Thomas', plate: 'CAA 890-123', rating: 4.9 },
+  { name: 'Jason Mthembu', plate: 'CAA 901-234', rating: 5.0 },
+];
 
 import { Car, Gem, Users, CreditCard, Apple } from 'lucide-react';
 
@@ -6,13 +19,14 @@ export const destinations = [
   { value: 'uwc-innovation-hub', label: 'UWC Innovation Hub' },
   { value: 'cput-bellville', label: 'CPUT Bellville Campus' },
   { value: 'sanlam-parow', label: 'Sanlam Center Parow' },
-  { value: 'cpt-airport', label: 'Cape Town International Airport (CPT)' },
+  { value: 'cput-d6', label: 'CPUT Cape Town Campus' },
   { value: 'va-waterfront', label: 'V&A Waterfront' },
-  { value: 'table-mountain', label: 'Table Mountain Cableway' },
+  { value: 'nmj', label: 'New Market Junction' },
   { value: 'kirstenbosch', label: 'Kirstenbosch Gardens' },
+  { value: 'cpt-airport', label: 'Cape Town International Airport (CPT)' },
   { value: 'camps-bay', label: 'Camps Bay Beach' },
   { value: 'ct-icc', label: 'Cape Town International Convention Centre' },
-  { value: 'boulders-beach', label: 'Boulders Beach Penguin Colony' },
+
 ];
 
 

@@ -7,35 +7,63 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { allRides, destinations, providers, paymentMethods } from '@/lib/data';
+import Image from 'next/image';
 import { ArrowLeft, MapPin, Printer, Wallet, CheckCircle, Building, CreditCard, User, Users } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+
+
 
 function ReceiptContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isClient, setIsClient] = useState(false);
+  const [localData, setLocalData] = useState<any>(null);
+  const [driver, setDriver] = useState<any>(null);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const destinationValue = searchParams.get('destination');
-  const rideId = searchParams.get('rideId');
-  const token = searchParams.get('token');
-  const paymentId = searchParams.get('payment');
-  const driverName = searchParams.get('driverName');
-  const guestName = searchParams.get('guestName');
+  // Prefer query params, fallback to localStorage
+  const destinationValue = searchParams.get('destination') || localData?.destination;
+  const rideId = searchParams.get('rideId') || localData?.rideId;
+  const token = searchParams.get('token') || localData?.token;
+  // Only allow card or cash
+  let paymentId = searchParams.get('payment') || localData?.payment || 'card';
+  if (paymentId !== 'card' && paymentId !== 'cash') paymentId = 'card';
+  const guestName = searchParams.get('guestName') || localData?.guestName;
+  const driverName = driver?.name || 'SafeRide Driver';
+  const driverPlate = driver?.plate || 'CAA 000-000';
+  const driverRating = driver?.rating || 4.8;
 
   const destinationLabel = useMemo(() => {
     const predefined = destinations.find((d) => d.value === destinationValue);
     return predefined?.label || destinationValue;
   }, [destinationValue]);
 
+  useEffect(() => {
+    setIsClient(true);
+    // Try to load from localStorage if any required param is missing
+    const destinationValueCheck = searchParams.get('destination');
+    const rideIdCheck = searchParams.get('rideId');
+    const tokenCheck = searchParams.get('token');
+    const paymentIdCheck = searchParams.get('payment');
+    const driverNameCheck = searchParams.get('driverName');
+    const guestNameCheck = searchParams.get('guestName');
+    if (!destinationValueCheck || !rideIdCheck || !tokenCheck || !paymentIdCheck || !driverNameCheck) {
+      const stored = localStorage.getItem('saferide_booking');
+      if (stored) {
+        setLocalData(JSON.parse(stored));
+      }
+    }
+    // Pick a random driver only on client
+    const { drivers } = require('@/lib/data');
+    setDriver(drivers[Math.floor(Math.random() * drivers.length)]);
+  }, [searchParams]);
+
+  if (!driver) return null; // or a loading skeleton
+
   const ride = allRides.find((r) => r.id === rideId);
   const provider = providers.find((p) => p.id === ride?.provider);
   const paymentMethod = paymentMethods.find((p) => p.id === paymentId);
 
-  if (!destinationLabel || !ride || !provider || !token || !paymentMethod || !driverName) {
+  if (!destinationLabel || !ride || !provider || !token || !paymentMethod) {
     return (
        <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader>
@@ -51,8 +79,9 @@ function ReceiptContent() {
     );
   }
 
-  const baseFare = 15; //Base fare
-  const finalFare = baseFare * ride.priceMultiplier;
+  // Use fare from localStorage if available
+  const baseFare = 15;
+  const finalFare = localData?.finalFare || baseFare * ride.priceMultiplier;
   const RideIcon = ride.icon;
   const providerIconPath = provider.icon;
   const PaymentIcon = paymentMethod.icon;
@@ -69,7 +98,10 @@ function ReceiptContent() {
         <div className="mx-auto mb-4 flex flex-col items-center gap-4 text-primary">
             <CheckCircle className="h-16 w-16" />
             <CardTitle className="text-4xl font-bold font-headline">Ride Confirmed!</CardTitle>
-            <CardDescription className="text-lg text-muted-foreground">Thank you for riding with SafeRide. Here is your receipt.</CardDescription>
+            <CardDescription className="text-lg text-muted-foreground">
+              Thank you for riding with SafeRide.<br />
+              Here is your receipt.
+            </CardDescription>
         </div>
       </CardHeader>
       <CardContent className="space-y-6 p-8">
@@ -80,7 +112,10 @@ function ReceiptContent() {
         <div className="space-y-4 text-lg">
           <div className="flex justify-between items-center">
             <span className="font-semibold flex items-center gap-2"><Building className="text-muted-foreground"/> Provider</span>
-            <span className="flex items-center gap-2 font-semibold">{provider.name} <img src={providerIconPath} alt={provider.name} style={{height: 24, width: 'auto', objectFit: 'contain', display: 'inline-block', verticalAlign: 'middle'}} /></span>
+            <span className="flex items-center gap-2 font-semibold">
+              {provider.name}
+              <Image src={providerIconPath} alt={provider.name} width={24} height={24} className="h-6 w-auto object-contain inline-block align-middle" />
+            </span>
           </div>
           <Separator />
           <div className="flex justify-between items-center">
@@ -93,10 +128,15 @@ function ReceiptContent() {
             <span>{ride.name}</span>
           </div>
            <Separator />
-            <div className="flex justify-between items-center">
-                <span className="font-semibold flex items-center gap-2"><User className="text-muted-foreground"/> Driver</span>
-                <span>{driverName}</span>
-            </div>
+      <div className="flex justify-between items-center">
+        <span className="font-semibold flex items-center gap-2"><User className="text-muted-foreground"/> Driver</span>
+        <span>{driverName} ({driverRating} <span className="text-yellow-400">★</span>)</span>
+      </div>
+      <Separator />
+      <div className="flex justify-between items-center">
+        <span className="font-semibold flex items-center gap-2"><User className="text-muted-foreground"/> Registration Plate</span>
+        <span className="font-mono bg-muted px-2 py-1 rounded-md">{driverPlate}</span>
+      </div>
            <Separator />
             {guestName && (
             <>
