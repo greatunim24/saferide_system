@@ -14,6 +14,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 
 function ReceiptContent() {
+  // Auto-redirect to booking page after 5 seconds
+  useEffect(() => {
+    if (isClient) {
+      const timer = setTimeout(() => {
+        router.push('/booking');
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [isClient, router]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isClient, setIsClient] = useState(false);
@@ -79,14 +88,14 @@ function ReceiptContent() {
     );
   }
 
-  // Use fare from localStorage if available, else randomize but never less than 23
   const baseFare = 15;
   let finalFare = localData?.finalFare || baseFare * ride.priceMultiplier;
   if (!localData?.finalFare) {
-    // Randomize but never less than 23
-    const minFare = 23;
+    // Randomize but never less than 26
+    const minFare = 26;
     if (finalFare < minFare) {
-      finalFare = minFare;
+      // Add a little randomization above 26 for realism
+      finalFare = minFare + Math.floor(Math.random() * 10); 
     }
   }
   const RideIcon = ride.icon;
