@@ -158,15 +158,15 @@ export default function BookingPageContent() {
         <div className="h-8 w-auto mb-4 mx-auto flex justify-center items-center">
           <Logo size="default" />
         </div>
-        <CardTitle className="text-3xl text-center">Book a SafeRide</CardTitle>
+        <CardTitle className="text-3xl text-center">Book Your Ride</CardTitle>
         <CardDescription className="text-center">
-          Get to your destination safely and affordably.
+          Select your destination and ride preference
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-1">
           <Label htmlFor="destination" className="text-lg font-medium">
-            Select Destination
+            Where are you going?
           </Label>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -204,7 +204,7 @@ export default function BookingPageContent() {
           <>
             <Separator />
             <div className="space-y-1">
-              <Label className="text-lg font-medium">Filter by Provider</Label>
+              <Label className="text-lg font-medium">Choose your provider</Label>
               <ToggleGroup
                 type="multiple"
                 className="grid grid-cols-3 gap-2"
@@ -228,7 +228,7 @@ export default function BookingPageContent() {
             <Separator />
 
             <div>
-              <Label className="text-lg font-medium mb-2 block">Select Ride</Label>
+              <Label className="text-lg font-medium mb-2 block">Choose your ride</Label>
               <RadioGroup
                 value={selectedRide ?? ''}
                 onValueChange={setSelectedRide}
