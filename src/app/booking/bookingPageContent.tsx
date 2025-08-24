@@ -212,14 +212,17 @@ export default function BookingPageContent() {
                 onValueChange={setSelectedProviders}
               >
                 {providers.map((provider) => (
-                  <ToggleGroupItem
-                    key={provider.id}
-                    value={provider.id}
-                    className={cn(
-                      'data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex h-10 w-full items-center justify-center rounded-md border border-muted bg-popover px-3'
+                    <ToggleGroupItem
+                      key={provider.id}
+                      value={provider.id}
+                      className={cn(
+                        'data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex h-24 w-full items-center justify-center rounded-xl border-2 border-muted bg-popover px-6 gap-4'
+                      )}
+                    >
+                    {provider.icon && (
+                      <Image src={provider.icon} alt={provider.name} width={64} height={64} className="h-16 w-auto object-contain" />
                     )}
-                  >
-                    {provider.name}
+                    <span className="font-bold text-lg">{provider.name}</span>
                   </ToggleGroupItem>
                 ))}
               </ToggleGroup>
