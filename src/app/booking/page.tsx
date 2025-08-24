@@ -92,8 +92,6 @@ const RideItem = React.memo(({ ride, baseFare, onSelect, isSelected }: RideItemP
 });
 
 
-"use client";
-
 import { Suspense } from 'react';
 
 function BookingPageContent() {
